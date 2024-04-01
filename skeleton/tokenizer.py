@@ -231,8 +231,6 @@ if __name__ == "__main__":
         for exp, real in zip(needed, x): 
             if exp != real: 
                 print(f'Expected: {exp}, got {real}')
-        
-    print("-" * 30)
 
     needed = [
         Token(type='variable', value='x'),
@@ -251,9 +249,6 @@ if __name__ == "__main__":
         for exp, real in zip(needed, x): 
             if exp != real: 
                 print(f'Expected: {exp}, got {real}')        
-
-    print("-" * 30)
-
 
     needed = [
         Token(type='variable', value='x'), 

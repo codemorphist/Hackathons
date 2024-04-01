@@ -73,7 +73,7 @@ def check_assignment_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    pass
+    pass 
 
 
 def check_expression_syntax(tokens):
@@ -98,7 +98,18 @@ def _check_parens(tokens):
     :param tokens: список токенів
     :return: success - булівське значення
     """
-    pass 
+    open_parens = 0
+
+    for token in tokens:
+        if token.type == "left_paren":
+            open_parens += 1
+        if token_type.type == "right_paren":
+            if open_parens == 0:
+                return False
+            else:
+                open_parens -= 1
+
+    return parens_count == 0
 
 
 def _check_pair(token, next_token):
@@ -110,7 +121,7 @@ def _check_pair(token, next_token):
     :param next_token: наступний токен
     :return: success - булівське значення
     """
-    pass 
+    pass
 
 
 def _check_start_end(tokens):

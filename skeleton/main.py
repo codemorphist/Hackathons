@@ -25,6 +25,8 @@ from code_generator import generate_code
 from interpreter import execute, ERRORS
 from storage import clear, get_last_error, get
 
+import os.path
+
 
 def show_help(): 
     print('\n')
@@ -36,6 +38,15 @@ def exec_program(filename):
         print('Помилка під час генерації коду: неправильне розширення у файлу.')
         return 
     
+    if not os.path.exists(filename):
+        print(f'Помилка під час генерації коду: файлу "{filename}" не існує.')
+        return
+
+    if not os.path.isfile(filename):
+        print(f'Помилка під час генерації коду: "{filename}" не є файлом.')
+        return
+
+
     with open(filename, 'r') as file: 
         lines = [line.strip() for line in file.readlines()]
         print('... ', end='')

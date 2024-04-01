@@ -62,6 +62,7 @@ def get_tokens(string):
     :return: список токенів
     """
     tokens = []
+    string = string.replace(" ", "")
     while string:
         token, string = _get_next_token(string)
         if token:
@@ -70,6 +71,14 @@ def get_tokens(string):
 
 
 def _get_next_token(string):
+    token, string_ = _get_token(string)
+    if token:
+        return token, string_
+    else:
+        return _get_other(string)
+
+
+def _get_token(string):
     """Функція повертає наступний токен та залишок рядка.
 
     :param string: рядок
@@ -77,7 +86,15 @@ def _get_next_token(string):
         next_token: наступний токен, якщо є, або None
         string: залишок рядка
     """
-    pass 
+    for _get in [_get_par, 
+                 _get_variable,
+                 _get_equal,
+                 _get_operator, 
+                 _get_constant]:
+        token, _string = _get(string)
+        if token:
+            return token, _string
+    return None, string
 
 
 def _get_par(string): 
@@ -88,7 +105,10 @@ def _get_par(string):
         next_token: дужка типу Token('left_paren', '(')
         string: залишок рядка
     """
-    pass 
+    ch = string[0]
+    if ch in ["(", ")"]:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
+    return None, string
 
 
 def _get_operator(string):
@@ -99,7 +119,11 @@ def _get_operator(string):
         next_token: оператор типу Token('operation', ...)
         string: залишок рядка
     """
-    pass
+    ch = string[0]
+    if ch in ["+", "-", "*", "/"]:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
+    return None, string
+
 
 
 def _get_equal(string): 
@@ -110,6 +134,11 @@ def _get_equal(string):
         next_token: оператор типу Token('equal', ...)
         string: залишок рядка
     """
+    ch = string[0]
+    if ch == "=":
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
+    return None, string
+
     
 
 def _get_constant(string):
@@ -120,7 +149,22 @@ def _get_constant(string):
         next_token: константа типу Token('constant', ...) або None
         string: залишок рядка
     """
-    pass
+    constant = ""
+    dot = False
+    end = 0
+    for ch in string:
+        if ch.isnumeric() or (constant != "" and not dot and ch == "."):
+            if ch == ".":
+                dot = True
+            constant += ch
+        else:
+            break
+        end += 1
+    if constant != "":
+        return Token("constant", constant), string[end:]
+    else:
+        return None, string
+    
 
 
 def _get_variable(string):
@@ -131,7 +175,19 @@ def _get_variable(string):
         next_token: змінна типу Token('variable', ...)
         string: залишок рядка
     """
-    pass 
+    var = "" 
+    end = 0
+    for ch in string:
+        if ch.isalpha() or (ch == "_") or (var != "" and ch.isnumeric()):
+            var += ch
+        else:
+            break
+        end += 1
+    if var != "":
+        return Token("variable", var), string[end:]
+    else:
+        return None, str 
+
 
 
 def _get_other(string):
@@ -142,11 +198,15 @@ def _get_other(string):
         next_token: змінна типу Token('other', ...)
         string: залишок рядка
     """
-    pass
+    token, string_ = _get_token(string)
+    if token:
+        return None, string
+    else:
+        return Token("other", string[0]), string[1:]
+ 
 
 
 if __name__ == "__main__":
-
     needed = [
         Token(type='left_paren', value='('),
         Token(type='left_paren', value='('),
@@ -172,6 +232,7 @@ if __name__ == "__main__":
             if exp != real: 
                 print(f'Expected: {exp}, got {real}')
         
+    print("-" * 30)
 
     needed = [
         Token(type='variable', value='x'),
@@ -190,6 +251,9 @@ if __name__ == "__main__":
         for exp, real in zip(needed, x): 
             if exp != real: 
                 print(f'Expected: {exp}, got {real}')        
+
+    print("-" * 30)
+
 
     needed = [
         Token(type='variable', value='x'), 

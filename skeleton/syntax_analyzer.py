@@ -73,7 +73,23 @@ def check_assignment_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    pass 
+    if len(tokens) < 3:
+        return False, ERRORS["empty_expr"]
+
+    if not _check_start_end(tokens):
+        return False, ERRORS["invalid_start"]
+
+    var = tokens[0]      
+    eq = tokens[1]
+    expr = tokens[2:]
+
+    if eq.type != "equal":
+        return False, ERRORS["incorrect_assignment"]
+
+    if not _check_pair(eq, expr[0]):
+        return False, ERRORS["invalid_pair"]
+
+    return check_expression_syntax(expr)    
 
 
 def check_expression_syntax(tokens):
@@ -88,7 +104,22 @@ def check_expression_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    pass 
+    if len(tokens) < 1:
+        return False, ERRORS["empty_expr"]
+
+    if not _check_start_end(tokens):
+        return False, ERRORS["invalid_start"]
+
+    if not _check_parens(tokens):
+        return False, ERRORS["incorrect_parens"]
+
+    for i, token in enumerate(tokens[:-1]):
+        if not _check_pair(tokens[i], tokens[i+1]):
+            return False, ERRORS["invalid_pair"].format(tokens[i], tokens[i+1])
+        if tokens[i].type == "equal":
+            return False, ERRORS["incorrect_assignment"]
+
+    return True, ""
 
 
 def _check_parens(tokens):
@@ -103,13 +134,13 @@ def _check_parens(tokens):
     for token in tokens:
         if token.type == "left_paren":
             open_parens += 1
-        if token_type.type == "right_paren":
+        if token.type == "right_paren":
             if open_parens == 0:
                 return False
             else:
                 open_parens -= 1
 
-    return parens_count == 0
+    return open_parens == 0
 
 
 def _check_pair(token, next_token):
@@ -121,7 +152,9 @@ def _check_pair(token, next_token):
     :param next_token: наступний токен
     :return: success - булівське значення
     """
-    pass
+    token_type = token.type
+    next_token_type = next_token.type
+    return next_token_type in VALID_PAIRS[token_type]
 
 
 def _check_start_end(tokens):
@@ -131,7 +164,10 @@ def _check_start_end(tokens):
     :param tokens: список токенів 
     :return: success -- True/False
     """
-    pass 
+    start = tokens[0].type
+    end = tokens[-1].type
+
+    return start in VALID_START and end in VALID_END
 
 
 if __name__ == "__main__":
@@ -139,6 +175,7 @@ if __name__ == "__main__":
     success2, error2 = check_expression_syntax(get_tokens("(ab1_ - 345.56)*/.2_cde23"))
     success3, error3 = check_expression_syntax(get_tokens(" - 345.56*/.2_cde23"))
     success4, error4 = check_expression_syntax(get_tokens("2 - 345.56 *"))
+
     success5, error5 = check_expression_syntax(get_tokens("2 - .2"))
     success6, error6 = check_expression_syntax(get_tokens("   "))
     success7, error7 = check_expression_syntax(get_tokens("((abc -3 * b2) + d5 / 7)"))

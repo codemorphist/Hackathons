@@ -18,6 +18,7 @@ ERRORS = {0: "",
           3: "Змінна невизначена"}
 
 
+
 def add(variable):
     """
     Функція додає змінну у память.
@@ -25,7 +26,13 @@ def add(variable):
     :param variable: змінна
     :return: None
     """
-    pass
+    global _storage
+    global _last_error
+
+    if is_in(variable):
+        _last_error = 1
+    else:
+        _storage[variable] = None
 
 
 def is_in(variable) -> bool:
@@ -34,7 +41,9 @@ def is_in(variable) -> bool:
     :param variable: змінна
     :return: булівське значенна (True, якщо є)
     """
-    pass 
+    global _storage
+
+    return variable in _storage
 
 
 def get(variable):
@@ -45,18 +54,34 @@ def get(variable):
     :param variable: змінна
     :return: значення змінної
     """
-    pass 
+    global _storage
+    global _last_error
+
+    if not is_in(variable):
+        _last_error = 2
+        return None
+    else:
+        value = _storage[variable]
+        if value is None:
+            _last_error = 3
+        return value
 
 
 def set(variable, value):
     """
     Функція встановлює значення змінної
-    Якщо змінна не існує, повертає помилку
+    Якщо змінна не існує, встановлює помилку
     :param variable: змінна
     :param value: нове значення
     :return: None
     """
-    pass
+    global _storage
+    global _last_error
+
+    if not is_in(variable):
+        _last_error = 2
+    else:
+        _storage[variable] = value
 
 
 def input_var(variable):
@@ -66,7 +91,7 @@ def input_var(variable):
     :param variable: змінна
     :return: None
     """
-    pass 
+    set(variable, int(input(f"{variable}: ")))
 
 
 def input_all():
@@ -75,7 +100,8 @@ def input_all():
     усіх змінних з пам'яті
     :return: None
     """
-    pass 
+    for var in _storage:
+        input_var(var)
 
 
 def clear():
@@ -83,7 +109,11 @@ def clear():
     Функція видаляє усі змінні з пам'яті.
     :return: None
     """
-    pass
+    global _storage
+    global _last_error
+
+    _storage = {}  
+    _last_error = 0
 
 
 def get_last_error():
@@ -94,7 +124,10 @@ def get_last_error():
 
     :return: код останньої помилки
     """
-    pass 
+    global _last_error
+    tmp = _last_error
+    _last_error = 0
+    return tmp 
 
 
 if __name__ == "__main__":

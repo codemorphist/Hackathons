@@ -38,7 +38,6 @@ ERRORS = {
     3: "Ділення на 0"
 }
 
-
 def _loadc(number):
     """Функція завантажує число у стек.
     
@@ -48,7 +47,13 @@ def _loadc(number):
     :param number: число
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
+
+    _stack.append(number)
+
+    _last_error = 0
+
 
 def _loadv(variable):
     """Функція завантажує значення змінної з пам'яті у стек.
@@ -67,7 +72,16 @@ def _loadv(variable):
     :param variable: ім'я змінної
     :return: None
     """
-    pass
+    global _last_error
+
+    if is_in(variable):
+        if get(variable) is None:
+            input_var(variable)
+            _last_error = 0
+        _stack.append(get(variable))
+    else:
+        print(variable)
+        _last_error = 2
 
 
 def _add(_=None):
@@ -82,7 +96,15 @@ def _add(_=None):
     :param _: ігнорується
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
+
+    a = _stack.pop()
+    b = _stack.pop()
+
+    _stack.append(b + a)
+
+    _last_error = 0
 
 
 def _sub(_=None):
@@ -98,7 +120,15 @@ def _sub(_=None):
     :param _: ігнорується
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
+
+    a = _stack.pop()
+    b = _stack.pop()
+
+    _stack.append(b - a)
+
+    _last_error = 0
 
 
 def _mul(_=None):
@@ -113,7 +143,16 @@ def _mul(_=None):
     :param _: ігнорується
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
+
+    a = _stack.pop()
+    b = _stack.pop()
+
+    _stack.append(b * a)
+
+    _last_error = 0
+ 
 
 
 def _div(_=None):
@@ -131,8 +170,20 @@ def _div(_=None):
     :param _: ігнорується
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
 
+    a = _stack.pop()
+    b = _stack.pop()
+
+    if a == 0:
+        _last_error = 3
+        return
+
+    _stack.append(b / a)
+
+    _last_error = 0
+    
 
 def _set(variable):
     """Функція бере останній елемент зі стеку
@@ -146,7 +197,14 @@ def _set(variable):
     :param variable: ім'я змінної
     :return: None
     """
-    pass
+    global _stack
+    global _last_error
+    
+    if is_in(variable):
+        value = _stack.pop()
+        storage_set(variable, value)
+    else:
+        _last_error = 2
 
 
 COMMAND_FUNCS = {
@@ -171,7 +229,20 @@ def execute(code):
     :param code: код програми - список кортежів (<команда>, <операнд>)
     :return: код останньої помилки або 0, якщо помилки немає
     """
-    pass
+    global _last_error
+
+    for inst, val in code:
+        if inst in COMMAND_FUNCS:
+            COMMAND_FUNCS[inst](val)
+        else:
+            print(inst)
+            _last_error = 1
+
+        if _last_error != 0:
+            print(ERRORS[_last_error])
+            return _last_error
+
+    return 0
 
 
 if __name__ == "__main__":
@@ -212,6 +283,7 @@ if __name__ == "__main__":
             ('LOADC', 1.0),
             ('SET', 'y')]
     clear()
+    
     last_error = execute(code)
     assert last_error == 2
 

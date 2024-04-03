@@ -139,7 +139,9 @@ def _get_equal(string):
         return Token(TOKEN_TYPES[ch], ch), string[1:]
     return None, string
 
-    
+
+
+
 
 def _get_constant(string):
     """Функція за рядком повертає константу (якщо є) та залишок рядка.

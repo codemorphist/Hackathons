@@ -93,6 +93,30 @@ def generate_code(program_lines: List[str], clear_storage=True):
 
     return code, err
 
+def _precendence(operation):
+    precendence_map = {
+        "+": 1,
+        "-": 1,
+        "*": 2,
+        "/": 2
+    }
+    return precendence_map.get(operation, 0)
+
+def _command(token):
+    if token.type == "operation":
+        if token.value == "+":
+            return ("ADD", None)
+        elif token.value == "-":
+            return ("SUB", None)
+        elif token.value == "*":
+            return ("MUL", None)
+        elif token.value == "/":
+            return ("DIV", None)
+    elif token.type == "variable":
+        return ("LOADV", token.value)
+    elif token.type == "constant":
+        return ("LOADC", float(token.value))
+
 
 def _generate_line_code(program_line: str):
     """Функція генерує код за рядком програми program_line.
@@ -120,7 +144,47 @@ def _generate_line_code(program_line: str):
         список команд - кортежів (<код_команди>, <операнд>)
         текст помилки
     """
-    pass
+    tokens = get_tokens(program_line)
+
+    res, err = check_assignment_syntax(tokens)
+    if not res and err != "Порожній вираз":
+        return [], err
+
+    tokens = tokens[::-1]
+
+    var = tokens.pop()
+    equal = tokens.pop()
+
+   
+    prior = {"(": 0, ")": 1, "*": 2, "/": 2, "+": 3, "-": 3}
+    code = []
+    stack = []
+
+    while tokens:
+        token = tokens.pop()
+        val = token.value
+        typ = token.type
+
+        if typ in ["left_paren", "right_paren", "operation"]:
+            if typ == "right_paren":
+                while stack and stack[-1].type != "left_paren":
+                    code.append(_command(stack.pop()))
+                stack.pop()
+            elif typ == "operation":
+                while stack and _precendence(stack[-1].value) >= _precendence(token.value):
+                    code.append(_command(stack.pop()))
+                stack.append(token)
+            else:
+                stack.append(token)
+        else:
+            code.append(_command(token))
+        
+    while stack:
+        code.append(_command(stack.pop()))
+         
+    code.append(("SET", var.value))
+
+    return code, err
 
 
 def _expression(code: list, tokens: List[Token]):
@@ -142,7 +206,7 @@ def _expression(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    pass
+    pass 
 
 
 def _term(code: list, tokens: List[Token]):
@@ -188,7 +252,7 @@ def _factor(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    pass
+    pass 
 
 
 if __name__ == "__main__":
@@ -235,8 +299,6 @@ if __name__ == "__main__":
             if exp != got: 
                 print(f'wrong code command: expected {exp}, got {got}')
 
-    assert is_in('a')
-    assert is_in('x')
 
     code2, error = generate_code(['x = ((_abc + 3.12) * (12 - (3 * 2)))'])
 

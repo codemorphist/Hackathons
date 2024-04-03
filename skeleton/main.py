@@ -7,6 +7,9 @@
 `exec(filename)` :
     відкрити файл з розширенням '.mlg' і виконати його як окрему програму
 
+`add()`:
+    додати змінну
+
 `clear()` : 
     очистити пам'ять 
 
@@ -23,7 +26,7 @@
 
 from code_generator import generate_code
 from interpreter import execute, ERRORS
-from storage import clear, get_last_error, get
+from storage import clear, get_last_error, get, add
 
 import os.path
 
@@ -100,6 +103,9 @@ def mainloop():
         elif line.startswith('exec'): 
             filename = line[len('exec('):-1]
             exec_program(filename)
+        elif line.startswith('add'):
+            var_name = line[len('add('):-1]
+            add(var_name)
         elif line.startswith('print'): 
             variable = line[len('print('):-1]
             print_var(variable)

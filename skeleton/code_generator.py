@@ -93,6 +93,7 @@ def generate_code(program_lines: List[str], clear_storage=True):
 
     return code, err
 
+
 def _precendence(operation):
     precendence_map = {
         "+": 1,
@@ -101,6 +102,7 @@ def _precendence(operation):
         "/": 2
     }
     return precendence_map.get(operation, 0)
+
 
 def _command(token):
     if token.type == "operation":

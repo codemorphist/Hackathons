@@ -185,6 +185,7 @@ def _generate_line_code(program_line: str):
         code.append(_command(stack.pop()))
          
     code.append(("SET", var.value))
+    add(var.value)
 
     return code, err
 

@@ -235,7 +235,6 @@ def execute(code):
         if inst in COMMAND_FUNCS:
             COMMAND_FUNCS[inst](val)
         else:
-            print(inst)
             _last_error = 1
 
         if _last_error != 0:

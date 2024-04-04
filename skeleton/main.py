@@ -68,7 +68,9 @@ def exec_program(filename):
 
 def print_var(variable): 
     var = get(variable)
-    if get_last_error() != 0: 
+    last_error = get_last_error()
+    if last_error != 0: 
+        print(last_error)
         print('Помилка під час виконання програми: змінна не існує.')
     else: 
         print(var)

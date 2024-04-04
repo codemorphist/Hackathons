@@ -73,18 +73,29 @@ def check_assignment_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    if len(tokens) < 3:
-        return False, ERRORS["empty_expr"]
 
-    if not _check_start_end(tokens):
-        return False, ERRORS["invalid_start"]
+    if not tokens: 
+        return False, ERRORS["empty_expr"]  
 
     var = tokens[0]      
+
+    if var.type == "constant":
+        return False, ERRORS["incorrect_assignment"]
+
+    if len(tokens) < 2:
+        return False, ERRORS["empty_expr"]
+    
     eq = tokens[1]
     expr = tokens[2:]
 
     if eq.type != "equal":
         return False, ERRORS["incorrect_assignment"]
+
+    if expr == []:
+        return False, ERRORS["empty_expr"]
+
+    if not _check_start_end(tokens):
+        return False, ERRORS["invalid_start"]
 
     if not _check_pair(eq, expr[0]):
         return False, ERRORS["invalid_pair"]
@@ -129,6 +140,9 @@ def _check_parens(tokens):
     :param tokens: список токенів
     :return: success - булівське значення
     """
+    if not tokens:
+        return True
+
     open_parens = 0
 
     for token in tokens:
@@ -164,6 +178,9 @@ def _check_start_end(tokens):
     :param tokens: список токенів 
     :return: success -- True/False
     """
+    if not tokens:
+        return
+
     start = tokens[0].type
     end = tokens[-1].type
 

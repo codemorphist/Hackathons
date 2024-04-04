@@ -33,6 +33,7 @@ def add(variable):
         _last_error = 1
     else:
         _storage[variable] = None
+        _last_error = 0
 
 
 def is_in(variable) -> bool:
@@ -67,7 +68,7 @@ def get(variable):
         return value
 
 
-def set(variable, value):
+def storage_set(variable, value):
     """
     Функція встановлює значення змінної
     Якщо змінна не існує, встановлює помилку
@@ -82,6 +83,7 @@ def set(variable, value):
         _last_error = 2
     else:
         _storage[variable] = value
+        _last_error = 0
 
 
 def input_var(variable):
@@ -91,7 +93,7 @@ def input_var(variable):
     :param variable: змінна
     :return: None
     """
-    set(variable, int(input(f"{variable}: ")))
+    storage_set(variable, int(input(f"{variable}: ")))
 
 
 def input_all():
@@ -125,9 +127,7 @@ def get_last_error():
     :return: код останньої помилки
     """
     global _last_error
-    tmp = _last_error
-    _last_error = 0
-    return tmp 
+    return _last_error
 
 
 if __name__ == "__main__":
@@ -139,11 +139,11 @@ if __name__ == "__main__":
     assert c == None and get_last_error() == 3
     c = get("b")
     assert c == None and get_last_error() == 2
-    set("a", 1)
+    storage_set("a", 1)
     assert get_last_error() == 0
     c = get("a")
     assert c == 1 and get_last_error() == 0
-    set("b", 2)
+    storage_set("b", 2)
     assert get_last_error() == 2
     add("x")
     assert get_last_error() == 0

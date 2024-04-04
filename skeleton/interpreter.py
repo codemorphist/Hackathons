@@ -23,7 +23,7 @@ number = _stack.pop()
 ("DIV", None) - обчислити частку від ділення двох верхніх елементів стеку
 ("SET", <змінна>) - встановити значення змінної у пам'яті (storage)
 """
-from storage import (get, clear, is_in, set as storage_set,
+from storage import (get, clear, is_in, storage_set,
                       get_last_error, input_var, add)
 
 
@@ -200,11 +200,11 @@ def _set(variable):
     global _stack
     global _last_error
     
-    if is_in(variable):
-        value = _stack.pop()
-        storage_set(variable, value)
-    else:
-        _last_error = 2
+    value = _stack.pop()
+    storage_set(variable, value)
+    
+    if get_last_error() == 2:
+        add(variable)
 
 
 COMMAND_FUNCS = {

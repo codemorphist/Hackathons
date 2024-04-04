@@ -147,6 +147,8 @@ def _generate_line_code(program_line: str):
         текст помилки
     """
     tokens = get_tokens(program_line)
+    if tokens == []:
+        return [], ""
 
     res, err = check_assignment_syntax(tokens)
     if not res and err != "Порожній вираз":

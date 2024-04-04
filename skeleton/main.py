@@ -7,9 +7,6 @@
 `exec(filename)` :
     відкрити файл з розширенням '.mlg' і виконати його як окрему програму
 
-`add()`:
-    додати змінну
-
 `clear()` : 
     очистити пам'ять 
 
@@ -70,7 +67,6 @@ def print_var(variable):
     var = get(variable)
     last_error = get_last_error()
     if last_error != 0: 
-        print(last_error)
         print('Помилка під час виконання програми: змінна не існує.')
     else: 
         print(var)
@@ -105,9 +101,6 @@ def mainloop():
         elif line.startswith('exec'): 
             filename = line[len('exec('):-1]
             exec_program(filename)
-        elif line.startswith('add'):
-            var_name = line[len('add('):-1]
-            add(var_name)
         elif line.startswith('print'): 
             variable = line[len('print('):-1]
             print_var(variable)

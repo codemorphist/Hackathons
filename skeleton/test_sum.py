@@ -39,7 +39,7 @@ success, error = check_expression_syntax(tokens)
 
 if success:
     fill_storage(tokens)
-    storage.set("a", 2)
+    storage.storage_set("a", 2)
     s = compute_sum(tokens)
     success = s == 10
 

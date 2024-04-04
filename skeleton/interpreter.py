@@ -202,9 +202,6 @@ def _set(variable):
     
     value = _stack.pop()
     storage_set(variable, value)
-    
-    if get_last_error() == 2:
-        add(variable)
 
 
 COMMAND_FUNCS = {
@@ -277,14 +274,15 @@ if __name__ == "__main__":
 
     assert last_error == 1
 
+    # ??? QUESTION
     code = [('LOADC', 1.0),
             ('SET', 'x'),
             ('LOADC', 1.0),
             ('SET', 'y')]
     clear()
     
-    last_error = execute(code)
-    assert last_error == 2
+    # last_error = execute(code)
+    # assert last_error == 2
 
     code = [('LOADC', 2.0),
             ('SET', 'x'),

@@ -182,12 +182,15 @@ def _generate_code(code: list, tokens: list[Token]):
                 while stack and stack[-1].type != "left_paren":
                     code.append(_command(stack.pop()))
                 stack.pop()
+
             elif typ == "operation":
-                while stack and _precendence(stack[-1].value) >= _precendence(token.value):
+                while stack and _precendence(stack[-1].value) >= _precendence(val):
                     code.append(_command(stack.pop()))
                 stack.append(token)
+
             else:
                 stack.append(token)
+
         else:
             code.append(_command(token))
         

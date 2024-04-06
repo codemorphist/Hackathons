@@ -80,7 +80,6 @@ def _loadv(variable):
             _last_error = 0
         _stack.append(get(variable))
     else:
-        print(variable)
         _last_error = 2
 
 

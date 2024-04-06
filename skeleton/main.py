@@ -73,7 +73,6 @@ def print_var(variable):
 
 
 def exec_line(line): 
-
     code, error = generate_code([line, ], clear_storage=False)
     if error: 
         print('Помилка під час генерації коду:', error)

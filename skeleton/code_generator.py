@@ -185,8 +185,11 @@ def _generate_line_code(program_line: str):
     while stack:
         code.append(_command(stack.pop()))
          
+    
+    if not is_in(var.value):
+        add(var.value)
+
     code.append(("SET", var.value))
-    add(var.value)
 
     return code, err
 

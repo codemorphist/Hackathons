@@ -74,25 +74,14 @@ def check_assignment_syntax(tokens):
         error: рядок помилки
     """
 
-    if not tokens: 
+    if len(tokens) < 3: 
         return False, ERRORS["empty_expr"]  
 
-    var = tokens[0]      
-
-    if var.type == "constant":
+    if token[0].type == "constant":
         return False, ERRORS["incorrect_assignment"]
 
-    if len(tokens) < 2:
-        return False, ERRORS["empty_expr"]
-    
-    eq = tokens[1]
-    expr = tokens[2:]
-
-    if eq.type != "equal":
+    if eq[1].type != "equal":
         return False, ERRORS["incorrect_assignment"]
-
-    if expr == []:
-        return False, ERRORS["empty_expr"]
 
     if not _check_start_end(tokens):
         return False, ERRORS["invalid_start"]
@@ -100,7 +89,7 @@ def check_assignment_syntax(tokens):
     if not _check_pair(eq, expr[0]):
         return False, ERRORS["invalid_pair"]
 
-    return check_expression_syntax(expr)    
+    return check_expression_syntax(tokens[2:])    
 
 
 def check_expression_syntax(tokens):
@@ -115,7 +104,7 @@ def check_expression_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    if len(tokens) < 1:
+    if not tokenizer:
         return False, ERRORS["empty_expr"]
 
     if not _check_start_end(tokens):
@@ -166,9 +155,7 @@ def _check_pair(token, next_token):
     :param next_token: наступний токен
     :return: success - булівське значення
     """
-    token_type = token.type
-    next_token_type = next_token.type
-    return next_token_type in VALID_PAIRS[token_type]
+    return next_token.type in VALID_PAIRS[token.type]
 
 
 def _check_start_end(tokens):
@@ -179,7 +166,7 @@ def _check_start_end(tokens):
     :return: success -- True/False
     """
     if not tokens:
-        return
+        return True
 
     start = tokens[0].type
     end = tokens[-1].type

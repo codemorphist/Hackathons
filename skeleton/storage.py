@@ -93,7 +93,7 @@ def input_var(variable):
     :param variable: змінна
     :return: None
     """
-    storage_set(variable, int(input(f"{variable}: ")))
+    storage_set(variable, float(input(f"{variable}: ")))
 
 
 def input_all():

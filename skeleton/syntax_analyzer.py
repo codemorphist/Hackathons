@@ -77,7 +77,7 @@ def check_assignment_syntax(tokens):
     if len(tokens) < 3: 
         return False, ERRORS["empty_expr"]  
 
-    if tokens[0].type == "constant":
+    if tokens[0].type != "variable":
         return False, ERRORS["incorrect_assignment"]
 
     if tokens[1].type != "equal":

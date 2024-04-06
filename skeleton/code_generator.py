@@ -160,7 +160,6 @@ def _generate_line_code(program_line: str):
     equal = tokens.pop()
 
    
-    prior = {"(": 0, ")": 1, "*": 2, "/": 2, "+": 3, "-": 3}
     code = []
     stack = []
 

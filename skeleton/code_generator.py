@@ -154,14 +154,24 @@ def _generate_line_code(program_line: str):
     if not res and err != "Порожній вираз":
         return [], err
 
-    tokens = tokens[::-1]
+    code = []
 
-    var = tokens.pop()
+    tokens = tokens[::-1]
+    var = tokens.pop()    
+    if err != "Порожній вираз":
+        _generate_code(code, tokens)
+
+    if not is_in(var.value):
+        add(var.value)
+
+    code.append(("SET", var.value))
+    return code, err
+
+
+def _generate_code(code: list, tokens: list[Token]):
     equal = tokens.pop()
    
-    code = []
     stack = []
-
     while tokens:
         token = tokens.pop()
         val = token.value
@@ -183,15 +193,7 @@ def _generate_line_code(program_line: str):
         
     while stack:
         code.append(_command(stack.pop()))
-         
     
-    if not is_in(var.value):
-        add(var.value)
-
-    code.append(("SET", var.value))
-
-    return code, err
-
 
 def _expression(code: list, tokens: List[Token]):
     """Функція генерує код за списком токенів виразу.

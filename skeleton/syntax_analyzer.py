@@ -80,11 +80,11 @@ def check_assignment_syntax(tokens):
     if tokens[0].type != "variable":
         return False, ERRORS["incorrect_assignment"]
 
+    if len(tokens) <= 2: 
+        return False, ERRORS["empty_expr"]
+
     if tokens[1].type != "equal":
         return False, ERRORS["incorrect_assignment"]
-
-    if len(tokens) < 3: 
-        return False, ERRORS["empty_expr"]  
 
     if not _check_start_end(tokens):
         return False, ERRORS["invalid_start"]

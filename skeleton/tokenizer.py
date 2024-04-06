@@ -42,7 +42,6 @@ TOKEN_TYPES = {
 
 
 class Token: 
-
     def __init__(self, type, value): 
         assert type in TOKEN_TYPE, 'недопустимий тип токена'
         self.type = type
@@ -125,7 +124,6 @@ def _get_operator(string):
     return None, string
 
 
-
 def _get_equal(string): 
     """Функція за рядком повертає присвоєння '=' (якщо є) та залишок рядка.
 
@@ -138,9 +136,6 @@ def _get_equal(string):
     if ch == "=":
         return Token(TOKEN_TYPES[ch], ch), string[1:]
     return None, string
-
-
-
 
 
 def _get_constant(string):
@@ -166,7 +161,6 @@ def _get_constant(string):
         return Token("constant", constant), string[end:]
     else:
         return None, string
-    
 
 
 def _get_variable(string):
@@ -191,7 +185,6 @@ def _get_variable(string):
         return None, str 
 
 
-
 def _get_other(string):
     """Функція за рядком повертає символи, які не є відомим токеном.
 
@@ -206,7 +199,6 @@ def _get_other(string):
     else:
         return Token("other", string[0]), string[1:]
  
-
 
 if __name__ == "__main__":
     needed = [

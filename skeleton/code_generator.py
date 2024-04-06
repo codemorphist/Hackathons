@@ -158,7 +158,6 @@ def _generate_line_code(program_line: str):
 
     var = tokens.pop()
     equal = tokens.pop()
-
    
     code = []
     stack = []

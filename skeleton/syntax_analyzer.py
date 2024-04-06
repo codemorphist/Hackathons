@@ -77,18 +77,15 @@ def check_assignment_syntax(tokens):
     if len(tokens) < 3: 
         return False, ERRORS["empty_expr"]  
 
-    if token[0].type == "constant":
+    if tokens[0].type == "constant":
         return False, ERRORS["incorrect_assignment"]
 
-    if eq[1].type != "equal":
+    if tokens[1].type != "equal":
         return False, ERRORS["incorrect_assignment"]
 
     if not _check_start_end(tokens):
         return False, ERRORS["invalid_start"]
-
-    if not _check_pair(eq, expr[0]):
-        return False, ERRORS["invalid_pair"]
-
+    
     return check_expression_syntax(tokens[2:])    
 
 
@@ -104,7 +101,7 @@ def check_expression_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-    if not tokenizer:
+    if not tokens:
         return False, ERRORS["empty_expr"]
 
     if not _check_start_end(tokens):

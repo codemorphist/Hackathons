@@ -70,11 +70,11 @@ def get_tokens(string):
 
 
 def _get_next_token(string):
-    token, string_ = _get_token(string)
+    token, string = _get_token(string)
     if token:
-        return token, string_
+        return token, string
     else:
-        return _get_other(string)
+        return _get_other(string) 
 
 
 def _get_token(string):
@@ -85,14 +85,22 @@ def _get_token(string):
         next_token: наступний токен, якщо є, або None
         string: залишок рядка
     """
-    for _get in [_get_par, 
-                 _get_variable,
-                 _get_equal,
-                 _get_operator, 
-                 _get_constant]:
-        token, _string = _get(string)
-        if token:
-            return token, _string
+    string = string.strip()
+
+    if not string:
+        return None, ""
+
+    if string[0] in TOKEN_TYPES:
+        return Token(TOKEN_TYPES[string[0]], string[0]), string[1:]
+    
+    var, _string = _get_variable(string)
+    if var is not None:
+        return var, _string
+    
+    const, _string = _get_constant(string) 
+    if const is not None:
+        return const, _string
+
     return None, string
 
 
@@ -104,10 +112,7 @@ def _get_par(string):
         next_token: дужка типу Token('left_paren', '(')
         string: залишок рядка
     """
-    ch = string[0]
-    if ch in ["(", ")"]:
-        return Token(TOKEN_TYPES[ch], ch), string[1:]
-    return None, string
+    pass 
 
 
 def _get_operator(string):
@@ -118,10 +123,7 @@ def _get_operator(string):
         next_token: оператор типу Token('operation', ...)
         string: залишок рядка
     """
-    ch = string[0]
-    if ch in ["+", "-", "*", "/"]:
-        return Token(TOKEN_TYPES[ch], ch), string[1:]
-    return None, string
+    pass 
 
 
 def _get_equal(string): 
@@ -132,10 +134,7 @@ def _get_equal(string):
         next_token: оператор типу Token('equal', ...)
         string: залишок рядка
     """
-    ch = string[0]
-    if ch == "=":
-        return Token(TOKEN_TYPES[ch], ch), string[1:]
-    return None, string
+    pass
 
 
 def _get_constant(string):
@@ -149,14 +148,16 @@ def _get_constant(string):
     constant = ""
     dot = False
     end = 0
+
     for ch in string:
-        if ch.isnumeric() or (constant != "" and not dot and ch == "."):
+        if ch.isnumeric() or (constant and not dot and ch == "."):
             if ch == ".":
                 dot = True
             constant += ch
         else:
             break
         end += 1
+
     if constant != "":
         return Token("constant", constant), string[end:]
     else:
@@ -174,15 +175,16 @@ def _get_variable(string):
     var = "" 
     end = 0
     for ch in string:
-        if ch.isalpha() or (ch == "_") or (var != "" and ch.isnumeric()):
+        if ch.isalpha() or ch == "_" or (var and ch.isnumeric()):
             var += ch
         else:
             break
         end += 1
+
     if var != "":
         return Token("variable", var), string[end:]
     else:
-        return None, str 
+        return None, string
 
 
 def _get_other(string):
@@ -193,9 +195,8 @@ def _get_other(string):
         next_token: змінна типу Token('other', ...)
         string: залишок рядка
     """
-    token, string_ = _get_token(string)
-    if token:
-        return None, string
+    if string[0] in TOKEN_TYPES:
+        return _get_token(string)
     else:
         return Token("other", string[0]), string[1:]
  

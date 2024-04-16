@@ -94,32 +94,6 @@ def generate_code(program_lines: List[str], clear_storage=True):
     return code, err
 
 
-def _precendence(operation):
-    precendence_map = {
-        "+": 1,
-        "-": 1,
-        "*": 2,
-        "/": 2
-    }
-    return precendence_map.get(operation, 0)
-
-
-def _command(token):
-    if token.type == "operation":
-        if token.value == "+":
-            return ("ADD", None)
-        elif token.value == "-":
-            return ("SUB", None)
-        elif token.value == "*":
-            return ("MUL", None)
-        elif token.value == "/":
-            return ("DIV", None)
-    elif token.type == "variable":
-        return ("LOADV", token.value)
-    elif token.type == "constant":
-        return ("LOADC", float(token.value))
-
-
 def _generate_line_code(program_line: str):
     """Функція генерує код за рядком програми program_line.
 
@@ -146,56 +120,33 @@ def _generate_line_code(program_line: str):
         список команд - кортежів (<код_команди>, <операнд>)
         текст помилки
     """
-    # tokens = get_tokens(program_line)
-    # if tokens == []:
-    #     return [], ""
-    #
-    # res, err = check_assignment_syntax(tokens)
-    # if not res and err != "Порожній вираз":
-    #     return [], err
-    #
-    # code = []
-    #
-    # tokens = tokens[::-1]
-    # var = tokens.pop()    
-    # if err != "Порожній вираз":
-    #     _generate_code(code, tokens)
-    #
-    # if not is_in(var.value):
-    #     add(var.value)
-    #
-    # code.append(("SET", var.value))
-    # return code, err
+    # Gen list of tokens
+    tokens = get_tokens(program_line)
 
+    if tokens == []:
+        return [], ""
 
-def _generate_code(code: list, tokens: list[Token]):
-    equal = tokens.pop()
-   
-    stack = []
-    while tokens:
-        token = tokens.pop()
-        val = token.value
-        typ = token.type
+    res, err = check_assignment_syntax(tokens)
+    if not res and err != "Порожній вираз":
+        return [], err
 
-        if typ in ["left_paren", "right_paren", "operation"]:
-            if typ == "right_paren":
-                while stack and stack[-1].type != "left_paren":
-                    code.append(_command(stack.pop()))
-                stack.pop()
+    # List for instructions
+    code = []
 
-            elif typ == "operation":
-                while stack and _precendence(stack[-1].value) >= _precendence(val):
-                    code.append(_command(stack.pop()))
-                stack.append(token)
+    # Reverse list of tokens to use pop()
+    tokens = tokens[::-1]
+    var = tokens.pop()    
+    eq = tokens.pop()
+    if err != "Порожній вираз":
+        _expression(code, tokens)
 
-            else:
-                stack.append(token)
+    code.append(("SET", var.value))
 
-        else:
-            code.append(_command(token))
-        
-    while stack:
-        code.append(_command(stack.pop()))
+    # Add variable to strorage if it not in
+    if not is_in(var.value):
+        add(var.value)
+
+    return code, err
     
 
 def _expression(code: list, tokens: List[Token]):
@@ -217,7 +168,15 @@ def _expression(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    pass 
+    _term(code, tokens)
+
+    while tokens and tokens[-1].value in "+-":
+        op = tokens.pop()
+        _term(code, tokens)
+        if op.value == '+':
+            code.append(("ADD", None))
+        elif op.value == "-":
+            code.append(("SUB", None))
 
 
 def _term(code: list, tokens: List[Token]):
@@ -239,7 +198,15 @@ def _term(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    pass 
+    _factor(code, tokens)
+    
+    while tokens and tokens[-1].value in "*/":
+        op = tokens.pop()
+        _factor(code, tokens)
+        if op.value == '*':
+            code.append(("MUL", None))
+        elif op.value == "/":
+            code.append(("DIV", None))
 
 
 def _factor(code: list, tokens: List[Token]):
@@ -263,7 +230,16 @@ def _factor(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    pass 
+    if tokens[-1].type == "left_paren":
+        tokens.pop() # remove '('
+        _expression(code, tokens)
+        tokens.pop() # remove ')'
+    else:
+        token = tokens.pop()
+        if token.type == "variable":
+            code.append(("LOADV", token.value))
+        elif token.type == "constant":
+            code.append(("LOADC", float(token.value)))
 
 
 if __name__ == "__main__":

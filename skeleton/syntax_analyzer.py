@@ -73,7 +73,6 @@ def check_assignment_syntax(tokens):
         success: булівське значення
         error: рядок помилки
     """
-
     if not tokens:
         return False, ERRORS["empty_expr"] 
 

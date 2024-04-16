@@ -136,10 +136,9 @@ def _generate_line_code(program_line: str):
     # Reverse list of tokens to use pop()
     tokens = tokens[::-1]
     var = tokens.pop() # pop variable to set
-    eq = tokens.pop() # pop '=' token
 
     # Generate expression
-    _expression(code, tokens)
+    _expression(code, tokens[:-1])
 
     code.append(("SET", var.value))
 
@@ -231,6 +230,9 @@ def _factor(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
+    if not tokens:
+        return
+
     if tokens[-1].type == "left_paren":
         tokens.pop() # remove '('
         _expression(code, tokens)

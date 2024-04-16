@@ -90,18 +90,20 @@ def _get_token(string):
     if not string:
         return None, ""
 
-    if string[0] in TOKEN_TYPES:
-        return Token(TOKEN_TYPES[string[0]], string[0]), string[1:]
-    
-    var, _string = _get_variable(string)
-    if var is not None:
-        return var, _string
-    
-    const, _string = _get_constant(string) 
-    if const is not None:
-        return const, _string
+    ch = string[0]
 
-    return None, string
+    if ch in TOKEN_TYPES:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
+    
+    # if first symbol is letter or _
+    if ch.isalpha() or ch == "_":
+        return _get_variable(string)
+    
+    # if first symbol is number
+    if ch.isnumeric():
+        return _get_constant(string) 
+
+    return _get_other(string)
 
 
 def _get_par(string): 
@@ -155,22 +157,19 @@ def _get_constant(string):
         string: залишок рядка
     """
     constant = ""
-    dot = False
-    end = 0
+    set_dot = False
 
     for ch in string:
-        if ch.isnumeric() or (constant and not dot and ch == "."):
+        if ch.isdigit() or (constant and not set_dot and ch == "."):
             if ch == ".":
-                dot = True
+                set_dot = True
             constant += ch
         else:
             break
-        end += 1
 
-    if constant != "":
-        return Token("constant", constant), string[end:]
-    else:
-        return None, string
+    if constant:
+        return Token("constant", constant), string[len(constant):]
+    return None, string
 
 
 def _get_variable(string):
@@ -182,18 +181,14 @@ def _get_variable(string):
         string: залишок рядка
     """
     var = "" 
-    end = 0
     for ch in string:
         if ch.isalpha() or ch == "_" or (var and ch.isnumeric()):
             var += ch
         else:
             break
-        end += 1
-
-    if var != "":
-        return Token("variable", var), string[end:]
-    else:
-        return None, string
+    if var:
+        return Token("variable", var), string[len(var):]
+    return None, string
 
 
 def _get_other(string):
@@ -204,10 +199,10 @@ def _get_other(string):
         next_token: змінна типу Token('other', ...)
         string: залишок рядка
     """
-    if string[0] in TOKEN_TYPES:
+    ch = string[0]
+    if ch in TOKEN_TYPES or ch.isdigit() or ch.isalpha() or ch == "_":
         return _get_token(string)
-    else:
-        return Token("other", string[0]), string[1:]
+    return Token("other", string[0]), string[1:]
  
 
 if __name__ == "__main__":

@@ -20,4 +20,5 @@ D = [
 x0 = (1/2, 1/2)
 
 Shooter = SelfAffineTile(A, D, x0, "Shooter")
-Shooter(1000, 100)
+Shooter(10000, 100, True)
+

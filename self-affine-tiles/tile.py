@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt 
 import numpy as np
-from random import choice
+from copy import copy
+from random import randint
+
 
 class SelfAffineTile:
     """
@@ -18,20 +20,24 @@ class SelfAffineTile:
         """
         self._name = name
         self._A = np.array(A)
+        self._q = abs(np.linalg.det(self._A)) # |det(A)|
         self._D = [np.array(v) for v in D]
         self._x0 = np.array(x0)
         self._points = np.array([])
 
-    def __call__(self, N: int, k: int):
+        self._colors = []
+
+    def __call__(self, N: int, k: int, colorize: bool=False):
         """
         Generate and display the tile.
 
         Parameters:
             N (int): Number of points to generate.
             k (int): Iteration depth.
+            colorize (bool): Colorize dots
         """
         self.generate(N, k)
-        self.show()
+        self.show(colorize)
 
     def generate(self, N: int, k: int) -> None:
         """
@@ -42,19 +48,29 @@ class SelfAffineTile:
             k (int): Iteration depth.
         """
         self._points = np.zeros((N, 2))
+        self._colors = []
 
         A = self._A
         D = self._D
 
-        for i in range(N):
-            x = self._x0
-            for j in range(k):
-                x = np.dot(A, x)+ choice(D)
-            self._points[i] = x
+        for l in range(N):
+            x = copy(self._x0)
+            c = 0
+            q = self._q
+            for j in range(k+1):
+                i = randint(0, len(D)-1)
+                x = np.dot(A, x) + D[i]
 
-    def show(self) -> None:
+                c = c * q + i
+            self._points[l] = x
+            self._colors.append(c)
+
+    def show(self, colorize: bool=False) -> None:
         """
         Display the tile.
+
+        Parameters:
+            colorize (bool): Colorize dots
         """
         if len(self._points) == 0:
             raise Exception("Points is empty. Use generate() before showing it.")
@@ -62,9 +78,11 @@ class SelfAffineTile:
         x_coords = self._points[:, 0]
         y_coords = self._points[:, 1]
 
-        plt.scatter(x_coords, 
-                    y_coords,
-                    s=1)
+        if not colorize:
+            plt.scatter(x_coords, y_coords, s=1)
+        else:
+            plt.scatter(x_coords, y_coords, s=1,
+                        c=self._colors, cmap="plasma")
 
         plt.xlabel("X")
         plt.ylabel("Y")

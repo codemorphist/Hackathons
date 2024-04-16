@@ -14,4 +14,4 @@ x0 = (1/2, 1/2)
 
 
 TwinDragon = SelfAffineTile(A, D, x0, "Twin Dragon")
-TwinDragon(10000, 100)
+TwinDragon(int(10e5), 20, colorize=True)

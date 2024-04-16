@@ -174,7 +174,7 @@ def _expression(code: list, tokens: List[Token]):
     while tokens and tokens[-1].value in "+-":
         op = tokens.pop()
         _term(code, tokens)
-        if op.value == '+':
+        if op.value == "+":
             code.append(("ADD", None))
         elif op.value == "-":
             code.append(("SUB", None))
@@ -204,7 +204,7 @@ def _term(code: list, tokens: List[Token]):
     while tokens and tokens[-1].value in "*/":
         op = tokens.pop()
         _factor(code, tokens)
-        if op.value == '*':
+        if op.value == "*":
             code.append(("MUL", None))
         elif op.value == "/":
             code.append(("DIV", None))

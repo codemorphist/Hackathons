@@ -166,7 +166,6 @@ def _get_constant(string):
             constant += ch
         else:
             break
-
     if constant:
         return Token("constant", constant), string[len(constant):]
     return None, string
@@ -202,7 +201,7 @@ def _get_other(string):
     ch = string[0]
     if ch in TOKEN_TYPES or ch.isdigit() or ch.isalpha() or ch == "_":
         return _get_token(string)
-    return Token("other", string[0]), string[1:]
+    return Token("other", ch), string[1:]
  
 
 if __name__ == "__main__":

@@ -42,8 +42,6 @@ def is_in(variable) -> bool:
     :param variable: змінна
     :return: булівське значенна (True, якщо є)
     """
-    global _storage
-
     return variable in _storage
 
 
@@ -126,7 +124,6 @@ def get_last_error():
 
     :return: код останньої помилки
     """
-    global _last_error
     return _last_error
 
 

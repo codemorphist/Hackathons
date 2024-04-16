@@ -146,26 +146,26 @@ def _generate_line_code(program_line: str):
         список команд - кортежів (<код_команди>, <операнд>)
         текст помилки
     """
-    tokens = get_tokens(program_line)
-    if tokens == []:
-        return [], ""
-
-    res, err = check_assignment_syntax(tokens)
-    if not res and err != "Порожній вираз":
-        return [], err
-
-    code = []
-
-    tokens = tokens[::-1]
-    var = tokens.pop()    
-    if err != "Порожній вираз":
-        _generate_code(code, tokens)
-
-    if not is_in(var.value):
-        add(var.value)
-
-    code.append(("SET", var.value))
-    return code, err
+    # tokens = get_tokens(program_line)
+    # if tokens == []:
+    #     return [], ""
+    #
+    # res, err = check_assignment_syntax(tokens)
+    # if not res and err != "Порожній вираз":
+    #     return [], err
+    #
+    # code = []
+    #
+    # tokens = tokens[::-1]
+    # var = tokens.pop()    
+    # if err != "Порожній вираз":
+    #     _generate_code(code, tokens)
+    #
+    # if not is_in(var.value):
+    #     add(var.value)
+    #
+    # code.append(("SET", var.value))
+    # return code, err
 
 
 def _generate_code(code: list, tokens: list[Token]):

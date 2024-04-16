@@ -15,4 +15,4 @@ D = [
 x0 = (1/2, 1/2)
 
 Gasket = SelfAffineTile(A, D, x0, "Gasket")
-Gasket(10000, 10)
+Gasket(1000, 100)

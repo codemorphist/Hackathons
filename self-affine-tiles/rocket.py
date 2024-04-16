@@ -20,4 +20,4 @@ D = [
 x0 = (1/2, 1/2)
 
 Rocket = SelfAffineTile(A, D, x0, "Rocket")
-Rocket(10000, 10)
+Rocket(1000, 100)

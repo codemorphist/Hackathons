@@ -64,7 +64,7 @@ class SelfAffineTile:
 
         plt.scatter(x_coords, 
                     y_coords,
-                    s=10)
+                    s=1)
 
         plt.xlabel("X")
         plt.ylabel("Y")

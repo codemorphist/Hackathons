@@ -112,7 +112,10 @@ def _get_par(string):
         next_token: дужка типу Token('left_paren', '(')
         string: залишок рядка
     """
-    pass 
+    if not string or (ch := string[0]) not in "()":
+        return None, string
+    else:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
 
 
 def _get_operator(string):
@@ -123,7 +126,10 @@ def _get_operator(string):
         next_token: оператор типу Token('operation', ...)
         string: залишок рядка
     """
-    pass 
+    if not string or (ch := string[0]) not in "+-*/":
+        return None, string
+    else:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
 
 
 def _get_equal(string): 
@@ -134,7 +140,10 @@ def _get_equal(string):
         next_token: оператор типу Token('equal', ...)
         string: залишок рядка
     """
-    pass
+    if not string or (ch := string[0]) != "=":
+        return None, string
+    else:
+        return Token(TOKEN_TYPES[ch], ch), string[1:]
 
 
 def _get_constant(string):

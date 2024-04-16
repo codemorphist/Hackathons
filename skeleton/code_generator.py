@@ -135,10 +135,11 @@ def _generate_line_code(program_line: str):
 
     # Reverse list of tokens to use pop()
     tokens = tokens[::-1]
-    var = tokens.pop()    
-    eq = tokens.pop()
-    if err != "Порожній вираз":
-        _expression(code, tokens)
+    var = tokens.pop() # pop variable to set
+    eq = tokens.pop() # pop '=' token
+
+    # Generate expression
+    _expression(code, tokens)
 
     code.append(("SET", var.value))
 

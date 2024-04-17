@@ -194,8 +194,6 @@ def _get_other(string):
         string: залишок рядка
     """
     ch = string[0]
-    if ch in TOKEN_TYPES or ch.isdigit() or ch.isalpha() or ch == "_":
-        return _get_token(string)
     return Token("other", ch), string[1:]
  
 

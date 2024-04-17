@@ -24,6 +24,7 @@
 ("SUB", None) - обчислити різницю двох верхніх елементів стеку
 ("MUL", None) - обчислити добуток двох верхніх елементів стеку
 ("DIV", None) - обчислити частку від ділення двох верхніх елементів стеку
+("POW", None) - обчислити степіть від двох верхніх елементів стеку
 
 ("SET", <змінна>) - встановити (присвоїти) значення змінної
                     у пам'яті (`storage.py`) рівним
@@ -57,6 +58,7 @@ COMMANDS = [
     "SUB",
     "MUL",
     "DIV",
+    "POW",
     "SET"
 ]
 
@@ -198,15 +200,24 @@ def _term(code: list, tokens: List[Token]):
     :param tokens: список токенів
     :return: None
     """
-    _factor(code, tokens)
+    _power(code, tokens)
     
     while tokens and tokens[-1].value in "*/":
         op = tokens.pop()
-        _factor(code, tokens)
+        _power(code, tokens)
         if op.value == "*":
             code.append(("MUL", None))
         elif op.value == "/":
             code.append(("DIV", None))
+
+
+def _power(code: list, tokens: list[Token]):
+    _factor(code, tokens)
+
+    while tokens and tokens[-1].value in "^":
+        op = tokens.pop()
+        _factor(code, tokens)
+        code.append(("POW", None))
 
 
 def _factor(code: list, tokens: List[Token]):
@@ -330,6 +341,26 @@ if __name__ == "__main__":
     success = not error and code3 == needed 
     if len(code3) != len(needed): 
         print(f"wrong amount of commands: expected {len(needed)}, got {len(code3)}")
+    elif not success: 
+        for exp, got in zip(needed, code3): 
+            if exp != got: 
+                print(f'wrong code command: expected {exp}, got {got}')
+
+
+    needed = [
+        ('LOADC', 3.0),
+        ('LOADV', 'a'),
+        ('LOADC', 2.0),
+        ('LOADC', 1.0),
+        ('ADD', None),
+        ('POW', None),
+        ('MUL', None),
+        ('SET', 'x')
+    ]
+    code4, error = generate_code(['x = 3 * a ^ (2 + 1) '])
+    success = not error and code4 == needed 
+    if len(code4) != len(needed): 
+        print(f"wrong amount of commands: expected {len(needed)}, got {len(code4)}")
     elif not success: 
         for exp, got in zip(needed, code3): 
             if exp != got: 

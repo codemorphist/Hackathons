@@ -85,25 +85,20 @@ def _get_token(string):
         next_token: наступний токен, якщо є, або None
         string: залишок рядка
     """
-    string = string.strip()
+     
+    for func in [
+        _get_par, 
+        _get_operator, 
+        _get_equal,
+        _get_constant, 
+        _get_variable, 
+        _get_other
+    ]: 
+        res, new_string = func(string)
+        if res is not None: 
+             return res, new_string
 
-    if not string:
-        return None, ""
-
-    ch = string[0]
-
-    if ch in TOKEN_TYPES:
-        return Token(TOKEN_TYPES[ch], ch), string[1:]
-    
-    # if first symbol is letter or _
-    if ch.isalpha() or ch == "_":
-        return _get_variable(string)
-    
-    # if first symbol is number
-    if ch.isnumeric():
-        return _get_constant(string) 
-
-    return _get_other(string)
+    raise Exception("Помилка під час генерації коду")    
 
 
 def _get_par(string): 

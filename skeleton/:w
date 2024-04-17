@@ -87,18 +87,19 @@ def _get_token(string):
     """
      
     for func in [
-        _get_par, 
+        _get_left_paren, 
+        _get_right_paren, 
         _get_operator, 
         _get_equal,
         _get_constant, 
         _get_variable, 
         _get_other
     ]: 
-        res, new_string = func(string)
+        res = func(string)
         if res is not None: 
-             return res, new_string
+             return res 
 
-    raise Exception("Помилка під час генерації коду")    
+    return None, string
 
 
 def _get_par(string): 

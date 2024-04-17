@@ -21,6 +21,7 @@ number = _stack.pop()
 ("SUB", None) - обчислити різницю двох верхніх елементів стеку
 ("MUL", None) - обчислити добуток двох верхніх елементів стеку
 ("DIV", None) - обчислити частку від ділення двох верхніх елементів стеку
+("POW", None) - обчислити степіть від двох верхніх елементів стеку
 ("SET", <змінна>) - встановити значення змінної у пам'яті (storage)
 """
 from storage import (get, clear, is_in, storage_set,
@@ -184,6 +185,29 @@ def _div(_=None):
     _last_error = 0
     
 
+def _pow(_=None):
+    """
+    Функція бере останнй та передостанній елементи зі стеку,
+    обчислює перед останній елемент в степені останнього.
+    
+    Щоб взяти значення зі стеку, використовує _stack.pop()
+    
+    Щоб додати у стек, використовує _stack.append(...)
+    
+    Побічний ефект: встановлює значення _last_error у 0
+    :param _: ігнорується
+    :return: None
+    """
+    global _stack
+
+    a = _stack.pop()
+    b = _stack.pop()
+
+    _stack.append(b ** a)
+
+    _last_error = 0
+
+
 def _set(variable):
     """Функція бере останній елемент зі стеку
     та встановлює значення змінної рівним цьому елементу.
@@ -196,9 +220,6 @@ def _set(variable):
     :param variable: ім'я змінної
     :return: None
     """
-    global _stack
-    global _last_error
-    
     value = _stack.pop()
     storage_set(variable, value)
 
@@ -210,6 +231,7 @@ COMMAND_FUNCS = {
     "SUB": _sub,
     "MUL": _mul,
     "DIV": _div,
+    "POW": _pow,
     "SET": _set
 }
 
@@ -301,5 +323,21 @@ if __name__ == "__main__":
 
     z = get('z')
     assert last_error == 0 and z == 1.0
+
+    code = [
+        ('LOADC', 2.0),
+        ('SET', 'x'),
+        ('LOADV', 'x'),
+        ('LOADV', 'x'),
+        ('POW', None),
+        ('SET', 'y')
+    ]
+    add('x')
+    add('y')
+
+    last_error = execute(code)
+
+    y = get('y')
+    assert last_error == 0 and y == 4.0
 
     print("Success = True")

@@ -124,7 +124,7 @@ def _get_operator(string):
         next_token: оператор типу Token('operation', ...)
         string: залишок рядка
     """
-    if not string or (ch := string[0]) not in "+-*/":
+    if not string or (ch := string[0]) not in "+-*/^":
         return None, string
     else:
         return Token(TOKEN_TYPES[ch], ch), string[1:]

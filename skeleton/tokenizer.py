@@ -8,7 +8,7 @@
 Вираз може містити:
     - змінні - ідентифікатори
     - константи - дійсні або цілі числа без знаку
-    - знаки операцій: +, -, *, /
+    - знаки операцій: +, -, *, /, ^
     - дужки: (, )
 
 Функція `get_tokens` за заданим виразом має повертати послідовність 
@@ -35,6 +35,7 @@ TOKEN_TYPES = {
     "-": "operation",
     "*": "operation",
     "/": "operation",
+    "^": "operation",
     "(": "left_paren",
     ")": "right_paren",
     "=": "equal",
@@ -266,5 +267,31 @@ if __name__ == "__main__":
         for exp, real in zip(needed, x): 
             if exp != real: 
                 print(f'Expected: {exp}, got {real}')        
+
+    needed = [
+        Token(type='variable', value='x'),
+        Token(type='equal', value='='),
+        Token(type='variable', value='y'),
+        Token(type='other', value='^'),
+        Token(type='constant', value='2'),
+        Token(type='operation', value='+'),
+        Token(type='left_paren', value='('),
+        Token(type='variable', value='av_'),
+        Token(type='other', value='^'),
+        Token(type='constant', value='4'),
+        Token(type='operation', value='-'),
+        Token(type='constant', value='5'),
+        Token(type='right_paren', value=')'),
+        Token(type='operation', value='*'),
+        Token(type='constant', value='4')
+    ]
+
+    success = success and (x := get_tokens("x = y ^ 2 + (av_^4 - 5) * 4")) == needed
+    if not success: 
+        if len(x) != len(needed): 
+            print(f'wrong amount of tokens. Expected: {len(needed)}, got: {len(x)}')
+        for exp, real in zip(needed, x): 
+            if exp != real: 
+                print(f'Expected: {exp}, got {real}')   
 
     print("Success =", success)

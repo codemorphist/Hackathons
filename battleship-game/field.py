@@ -61,17 +61,13 @@ class Field:
 
     def is_ship(self, coord: Coord) -> bool:
         for ship in ShipIterator(self):   
-            pass
+            size = ship.size
+            pos = ship.pos            
+            orient = ship.orient.value 
+            current = pos
+            for _ in range(size):
+                if current == coord:
+                    return True
+                current += orient
+        return False
 
-
-if __name__ == "__main__":
-    f = Field(
-        [
-            Frigate(Coord(3,2), Orientation.Up),
-            Brig(Coord(5, 6), Orientation.Left)
-        ]
-    )
-
-    for s in ShipIterator(f):
-        print(s)
-        input()

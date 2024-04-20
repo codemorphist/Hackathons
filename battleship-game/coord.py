@@ -49,6 +49,9 @@ class Coord:
     def __rmul__(self, val: int):
         return self * val 
 
+    def __eq__(self, coord):
+        return tuple(self) == tuple(coord)
+
     def __repr__(self) -> str:
         return f"Cord(x={self.x}, y={self.y})"
 

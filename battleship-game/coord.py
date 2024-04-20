@@ -57,5 +57,7 @@ class Coord:
         Return coodinates in algebraic notation:
         <letter><integer>
         """
+        if self.x < 0 or self.x >= 26:
+            return f"{tuple(self)}"
         return f"{chr(ord('a') + self.x)}{self.y + 1}"
 

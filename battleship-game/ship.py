@@ -1,11 +1,12 @@
 from enum import Enum
 from coord import Coord
+from typing import Tuple
 
 
 class Orientation(Enum):
     Up = Coord(0, -1)
     Left = Coord(-1, 0)
-    Right = Coord(0, -1)
+    Right = Coord(1, 0)
     Down = Coord(0, 1)
 
 
@@ -43,6 +44,31 @@ class Ship:
     @property
     def decks(self) -> list[int]:
         return self._decks
+
+    def attack_deck(self, index: int):
+        if index >= self.size:
+            return
+        self._decks[index] = 1
+
+    def get_start_end(self) -> Tuple[Coord, Coord]:
+        offset = Coord(1, -1) if self.orient in (Orientation.Down, Orientation.Left) else Coord(-1, 1)
+        start = self.pos + offset
+        end = self.pos + (self.size - 1) * self.orient.value + offset
+        return start, end if self.orient in (Orientation.Up, Orientation.Right) else end, start
+    
+
+    def get_start_end(self) -> Tuple[Coord, Coord]:
+        if self.orient in (Orientation.Up, Orientation.Right):
+            start = self.pos + Coord(-1, 1)
+            end = self.pos + (self.size-1) * self.orient.value + Coord(1, -1)
+            return start, end
+        else:
+            start = self.pos + Coord(1, -1)
+            end = self.pos + (self.size-1) * self.orient.value + Coord(-1, 1)
+            return end, start 
+
+    def is_destroyed(self) -> bool:
+        return sum(self.decks) == self.size
 
     def __repr__(self) -> Orientation:
         return f"{type(self).__name__}(pos={repr(self.pos)}, size={self.size}, orientation={self.orient.name}, decks={self.decks})"
@@ -91,7 +117,7 @@ class Gunboat(Ship):
     def __init__(self, pos: Coord, orient: Orientation):
         return super().__init__(
             pos=pos,
-            size=2,
+            size=1,
             orient=orient
         )
 

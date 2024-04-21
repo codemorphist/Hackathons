@@ -19,7 +19,7 @@ class MoveResult(Enum):
     BlowUpMine = auto()
 
 
-class Battle:
+class BattleGame:
     def __init__(self, player1: Player, player2: Player):
         self._player1 = player1
         self._player2 = player2
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     p1 = Player("Player1", f1)
     p2 = Player("Player2", f2)
 
-    game = Battle(p1, p2)
+    game = BattleGame(p1, p2)
 
     print(game.attack(Coord(0, 0)))
     print(game._current_player)

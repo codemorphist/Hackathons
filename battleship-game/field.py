@@ -106,8 +106,16 @@ class Field:
     def size(self):
         return self._size
 
-    def get_object(self, coord: Coord) -> GameObject:
-        return self._map.get(coord, (None, None))
+    def get_object(self, coord: Coord, smoke: bool=False) -> GameObject:
+        obj, i = self._map.get(coord, (None, None))
+
+        if smoke:
+            if isinstance(obj, Ship) and obj.is_destroyed():
+                return obj, i
+            if isinstance(obj, Attacked):
+                return obj, i
+
+        return obj, i
 
     def on_field(self, coord: Coord) -> bool:
         x, y = coord
@@ -139,16 +147,6 @@ class Field:
             
         return attacked_objects
    
-    @property
-    def field(self):
-        field = {}
-        for c, obj in self.map.items():
-            if isinstance(obj[0], Attacked):
-                field[c] = obj
-            if isinstance(obj[0], Ship) and obj[0].is_destroyed():
-                field[c] = obj
-        return field
-
     def iterate_rectangle(self, start: Coord, end: Coord):
         x1, y1 = start
         x2, y2 = end

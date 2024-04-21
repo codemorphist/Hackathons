@@ -20,3 +20,4 @@ class Mine:
 
     def __repr__(self) -> str:
         return f"Mine(pos={repr(self.pos)}, damage_radius={self.damage_radius})"
+

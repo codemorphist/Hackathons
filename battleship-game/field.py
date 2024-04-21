@@ -165,7 +165,7 @@ if __name__ == "__main__":
             Brig(Coord(2, 7), Orientation.Right),
             Brig(Coord(5, 6), Orientation.Up),
             Gunboat(Coord(3, 3), Orientation.Up),
-            Gunboat(Coord(2, 5), Orientation.Left),
+            Gunboat(Coord(2, 6), Orientation.Left),
             Mine(Coord(4, 4), 8)
         ]
     )
@@ -176,9 +176,6 @@ if __name__ == "__main__":
     MAGENTA = "\u001b[35m"
     BLUE = "\u001b[34m"
     RESET = "\u001b[0m"
-
-
-    f.blow_up_mine(Mine(Coord(4, 4), 1))
 
 
     print(" ", BLUE + " ".join([chr(ord("a")+i) for i in range(f.size)]) + RESET)

@@ -136,7 +136,6 @@ class Field:
                coord: Coord, 
                attacked_check: bool = True) -> Union[Ship, Mine, None]:
         obj, i = self.get_object(coord)
-
         if obj is None or isinstance(obj, Mine):
             self._map[coord] = (Attacked(), None)
         elif isinstance(obj, Ship):

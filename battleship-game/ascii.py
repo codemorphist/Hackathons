@@ -44,9 +44,10 @@ def draw_game(game: BattleGame, player: Player):
 
     if player is p2:
         p1, p2 = p2, p1
-    print(f"Player <{p1.name}>")
+    print(f"Капітан '{p1.name}'")
     draw_field(p1.field)
-    print(f"Player <{p2.name}>")
+    print()
+    print(f"Капітан '{p2.name}'")
     draw_field(p2.field, smoke=True)
     print()
 

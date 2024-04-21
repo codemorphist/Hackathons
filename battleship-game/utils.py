@@ -19,14 +19,7 @@ def _random_place_ship(field: Field, ship: type, count: int):
 
     
 def _random_place_mine(field: Field, mine: type, count: int):
-    while True:
-        coord = random_coord(field.size)
-        m = mine(coord)
-        try:
-            field.can_place_mine(m)
-            field.place_object(m)
-        except:
-            pass 
+   pass 
 
 
 def random_field(size: int = 8, rules = DefaultRules) -> Field:

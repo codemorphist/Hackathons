@@ -42,8 +42,6 @@ class BattleGame:
         Retrun True if square by coord on field or not attacked
         else raise Exception
         """
-        if self.status is not BattleStatus.Running:
-            return False
         obj, _ = self.other_player.field.get_object(coord, True)
         if isinstance(obj, Attacked):
             return False
@@ -59,15 +57,16 @@ class BattleGame:
                 move_result = MoveResult.ShipDestroyed
             else:
                 move_result = MoveResult.ShipDamaged
+            self._update_status()
         elif isinstance(obj, Mine):
             self.current_player.field.blow_up_mine(obj)
             move_result = MoveResult.BlowUpMine
+            self._update_status()
             self._switch_turn()
         else:
             move_result = MoveResult.Miss
             self._switch_turn()
 
-        self._update_status()
         return move_result, self.status
 
     def _switch_turn(self):

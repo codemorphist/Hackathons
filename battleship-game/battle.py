@@ -80,7 +80,7 @@ class BattleGame:
         return self._status
 
     def _update_status(self):
-        for ship in self._other_player.field.ships:
+        for ship in self.other_player.field.ships:
             # If player have one undestroyed ship game stay running 
             if not ship.is_destroyed():
                 self._status = BattleStatus.Running  

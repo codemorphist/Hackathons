@@ -49,23 +49,19 @@ class Ship:
         if index >= self.size:
             return
         self._decks[index] = 1
-
-    def get_start_end(self) -> Tuple[Coord, Coord]:
-        offset = Coord(1, -1) if self.orient in (Orientation.Down, Orientation.Left) else Coord(-1, 1)
-        start = self.pos + offset
-        end = self.pos + (self.size - 1) * self.orient.value + offset
-        return start, end if self.orient in (Orientation.Up, Orientation.Right) else end, start
     
-
     def get_start_end(self) -> Tuple[Coord, Coord]:
+        start = self.pos
+        end = self.pos + (self.size-1) * self.orient.value
+        offset = Coord(-1, 1)
         if self.orient in (Orientation.Up, Orientation.Right):
-            start = self.pos + Coord(-1, 1)
-            end = self.pos + (self.size-1) * self.orient.value + Coord(1, -1)
-            return start, end
+            start += offset
+            end -= offset
         else:
-            start = self.pos + Coord(1, -1)
-            end = self.pos + (self.size-1) * self.orient.value + Coord(-1, 1)
-            return end, start 
+            start -= offset
+            end += offset 
+            start, end = end, start
+        return end, start        
 
     def is_destroyed(self) -> bool:
         return sum(self.decks) == self.size

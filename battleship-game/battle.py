@@ -29,16 +29,38 @@ class BattleGame:
         self._other_player = self._player2
         self._status = BattleStatus.Running
 
+    @property
+    def current_player(self):
+        return self._current_player
+
+    @property
+    def other_player(self):
+        return self._other_player
+
+    def can_attack(self, coord: Coord) -> bool:
+        """
+        Retrun True if square by coord on field or not attacked
+        else raise Exception
+        """
+        if self.status is not BattleStatus.Running:
+            return False
+        obj, _ = self.other_player.field.get_object(coord, True)
+        if isinstance(obj, Attacked):
+            return False
+        if isinstance(obj, Ship):
+            return False
+        return True
+
     def attack(self, coord: Coord) -> Tuple[MoveResult, BattleStatus]: 
         move_result = None
-        obj = self._other_player.field.attack(coord)
+        obj = self.other_player.field.attack(coord)
         if isinstance(obj, Ship):
             if obj.is_destroyed(): 
                 move_result = MoveResult.ShipDestroyed
             else:
                 move_result = MoveResult.ShipDamaged
         elif isinstance(obj, Mine):
-            self._current_player.field.blow_up_mine(obj)
+            self.current_player.field.blow_up_mine(obj)
             move_result = MoveResult.BlowUpMine
             self._switch_turn()
         else:
@@ -59,11 +81,12 @@ class BattleGame:
 
     def _update_status(self):
         for ship in self._other_player.field.ships:
-            # If player have one undestroyed ship game continue
+            # If player have one undestroyed ship game stay running 
             if not ship.is_destroyed():
                 self._status = BattleStatus.Running  
                 return
-        if self._current_player is self._player1:
+
+        if self.current_player is self._player1:
             self._status = BattleStatus.Player1Win
         else:
             self._status = BattleStatus.Player2Win

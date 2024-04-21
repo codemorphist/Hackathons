@@ -28,6 +28,12 @@ class InvalidCount(Exception):
         super().__init__(message)
 
 
+class InvalidMove(Exception):
+    def __init__(self, coord):
+        message = f"Ivalid move {str(coord)}"
+        super().__init__(message)
+
+
 class AlreadyAttacked(Exception):
     def __init__(self, coord):
         message = f"You already attacked coord {str(coord)}"

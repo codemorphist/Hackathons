@@ -133,11 +133,16 @@ class Field:
         x, y = coord
         return 0 <= x < self.size and 0 <= y < self.size
 
-    def attack(self, coord: Coord) -> Union[Ship, Mine, None]:
+    def attack(self, 
+               coord: Coord, 
+               attacked_check: bool = True) -> Union[Ship, Mine, None]:
         obj, i = self.get_object(coord)
         if obj is None or isinstance(obj, Mine):
             self._map[coord] = (Attacked(), None)
         elif isinstance(obj, Ship):
+            if attacked_check and obj.decks[i]:
+                raise AlreadyAttacked(coord)
+
             obj.attack_deck(i)
             if obj.is_destroyed():
                 start, end = obj.get_start_end()
@@ -147,7 +152,7 @@ class Field:
                     if isinstance(o, Ship):
                         continue
                     self._map[coord] = (Attacked(), None)
-        elif isinstance(obj, Attacked):
+        elif attacked_check and isinstance(obj, Attacked):
             raise AlreadyAttacked(coord)
         return obj
 
@@ -157,7 +162,7 @@ class Field:
         end = mine.pos + mine.damage_radius * Coord(1, 1)
 
         for coord in self.iterate_rectangle(start, end):
-            attacked_objects.append(self.attack(coord))
+            attacked_objects.append(self.attack(coord, False))
             
         return attacked_objects
    

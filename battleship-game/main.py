@@ -56,11 +56,8 @@ while status is BattleStatus.Running:
         move = Coord(*tuple(map(int, input("Input you move: ").split())))
     else:
         move = random_move()    
-        while True:
-            if game._player2.field.get_object(move)[0] is not Attacked:
-                break
-            else:
-                move = random_move()
+        while not game.can_attack(move):
+            move = random_move()
 
     res, status = game.attack(move)
     draw_game(game, p1)

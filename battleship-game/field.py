@@ -110,10 +110,12 @@ class Field:
         obj, i = self._map.get(coord, (None, None))
 
         if smoke:
-            if isinstance(obj, Ship) and obj.is_destroyed():
+            if isinstance(obj, Ship) and obj.decks[i] == 1:
                 return obj, i
-            if isinstance(obj, Attacked):
+            elif isinstance(obj, Attacked):
                 return obj, i
+            else:
+                return None, None
 
         return obj, i
 

@@ -28,7 +28,7 @@ class InvalidCount(Exception):
         super().__init__(message)
 
 
-class AlredyAttacked(Exception):
+class AlreadyAttacked(Exception):
     def __init__(self, coord):
         message = f"You already attacked coord {str(coord)}"
         super().__init__(message)

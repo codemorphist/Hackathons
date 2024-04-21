@@ -29,6 +29,10 @@ class BattleGame:
         self._status = BattleStatus.Running
 
     def attack(self, coord: Coord) -> Tuple[MoveResult, BattleStatus]: 
+        # Check move on field
+        if not self._other_player.field.on_field(coord):
+            raise OutOfField(coord)
+
         # Check coord already attacked
         obj, _ = self._other_player.field.get_object(coord)
         if isinstance(obj, Attacked):

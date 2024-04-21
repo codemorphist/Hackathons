@@ -1,9 +1,15 @@
-from battle import BattleGame
+from battle import BattleGame, BattleStatus, MoveResult
 from coord import Coord
 from ship import *
 from field import *
 from player import Player
 from ascii import draw_game
+from random import randint
+from exceptions import *
+
+
+def random_move(size: int = 8):
+    return Coord(randint(0, size-1), randint(0, size-1))
 
 
 f1 = Field(
@@ -39,9 +45,25 @@ p2 = Player("Player2", f2)
 
 game = BattleGame(p1, p2)
 
-
+# print(game.attack(Coord(0, 0)))
 draw_game(game, p1)
+# exit()
 
-game.attack(Coord(4, 4))
+status = game.status
+while status is BattleStatus.Running:
+    move = None
+    if game._current_player is p1:
+        move = Coord(*tuple(map(int, input("Input you move: ").split())))
+    else:
+        move = random_move()    
+        while True:
+            if game._player2.field.get_object(move)[0] is not Attacked:
+                break
+            else:
+                move = random_move()
 
-draw_game(game, p2)
+    res, status = game.attack(move)
+    draw_game(game, p1)
+    print(res)
+    input()
+

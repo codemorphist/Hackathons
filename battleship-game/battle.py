@@ -5,6 +5,7 @@ from player import Player
 from ship import Ship, Orientation, LinearShip, Frigate, Brig, Gunboat
 from mine import Mine
 from exceptions import *
+from typing import Tuple
 
 
 class BattleStatus(Enum):
@@ -27,7 +28,7 @@ class BattleGame:
         self._other_player = self._player2
         self._status = BattleStatus.Running
 
-    def attack(self, coord: Coord) -> MoveResult: 
+    def attack(self, coord: Coord) -> Tuple[MoveResult, BattleStatus]: 
         # Check coord already attacked
         obj, _ = self._other_player.field.get_object(coord)
         if isinstance(obj, Attacked):
@@ -44,8 +45,11 @@ class BattleGame:
             move_result = MoveResult.Miss
 
         self._update_status()
+        self._switch_turn()
+        return move_result, self.status
+
+    def _switch_turn(self):
         self._current_player, self._other_player = self._other_player, self._current_player
-        return move_result
 
     @property
     def status(self) -> BattleStatus:

@@ -114,6 +114,9 @@ class Field:
         return self._size
 
     def get_object(self, coord: Coord, smoke: bool=False) -> GameObject:
+        if not self.on_field(coord):
+            raise OutOfField(coord)
+
         obj, i = self._map.get(coord, (None, None))
 
         if smoke:
@@ -144,6 +147,8 @@ class Field:
                     if isinstance(o, Ship):
                         continue
                     self._map[coord] = (Attacked(), None)
+        elif isinstance(obj, Attacked):
+            raise AlreadyAttacked(coord)
         return obj
 
     def blow_up_mine(self, mine: Mine) -> GameObjects:

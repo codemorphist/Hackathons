@@ -30,15 +30,6 @@ class BattleGame:
         self._status = BattleStatus.Running
 
     def attack(self, coord: Coord) -> Tuple[MoveResult, BattleStatus]: 
-        # Check move on field
-        if not self._other_player.field.on_field(coord):
-            raise OutOfField(coord)
-
-        # Check coord already attacked
-        obj, _ = self._other_player.field.get_object(coord)
-        if isinstance(obj, Attacked):
-            raise AlreadyAttacked(coord)
-
         move_result = None
         obj = self._other_player.field.attack(coord)
         if isinstance(obj, Ship):
@@ -58,7 +49,9 @@ class BattleGame:
         return move_result, self.status
 
     def _switch_turn(self):
-        self._current_player, self._other_player = self._other_player, self._current_player
+        temp = self._current_player
+        self._current_player = self._other_player
+        self._other_player = temp
 
     @property
     def status(self) -> BattleStatus:

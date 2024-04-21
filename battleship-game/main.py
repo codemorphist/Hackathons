@@ -2,6 +2,7 @@ from battle import BattleGame, BattleStatus, MoveResult
 from coord import Coord
 from ship import *
 from field import *
+from mine import *
 from player import Player
 from ascii import draw_game
 from random import randint
@@ -22,7 +23,7 @@ f1 = Field(
             Brig(Coord(5, 6), Orientation.Up),
             Gunboat(Coord(3, 3), Orientation.Up),
             Gunboat(Coord(2, 5), Orientation.Left),
-            Mine(Coord(4, 4), 1)
+            SmallMine(Coord(4, 4))
         ]
     )
 
@@ -36,7 +37,7 @@ f2 = Field(
             Brig(Coord(5, 6), Orientation.Up),
             Gunboat(Coord(3, 3), Orientation.Up),
             Gunboat(Coord(2, 5), Orientation.Left),
-            Mine(Coord(4, 4), 1)
+            SmallMine(Coord(4, 4))
         ]
     )
 

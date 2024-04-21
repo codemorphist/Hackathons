@@ -21,3 +21,10 @@ class Mine:
     def __repr__(self) -> str:
         return f"Mine(pos={repr(self.pos)}, damage_radius={self.damage_radius})"
 
+
+class SmallMine(Mine):
+    """
+    Mine with 1 damage radius
+    """
+    def __init__(self, pos: Coord):
+        super().__init__(pos, 1)

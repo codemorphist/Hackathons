@@ -1,7 +1,7 @@
 from typing import List, Dict, Union, TypeAlias
 from coord import Coord
 from ship import Ship, Orientation, LinearShip, Frigate, Brig, Gunboat
-from mine import Mine
+from mine import Mine, SmallMine
 from exceptions import *
 from copy import copy
 
@@ -15,7 +15,7 @@ DefaultRules = {
     Frigate: 2,
     Brig: 3,
     Gunboat: 4,
-    Mine: 2
+    SmallMine: 2
 }
 
 
@@ -48,25 +48,26 @@ class Field:
             raise InvalidGameObject(obj)
 
     def _place_mine(self, obj: Mine):
-        self._can_place_mine(obj)
+        self.can_place_mine(obj)
         self._map[obj.pos] = (obj, None)
+        self._update_rule(obj)
 
     def _place_ship(self, obj: Ship):
-        self._can_place_ship(obj)
+        self.can_place_ship(obj)
         curr = obj.pos
         for deck in range(obj.size):
             self._map[curr] = (obj, deck)
             curr += obj.orient.value
         self._ships.append(obj)
+        self._update_rule(obj)
 
-    def _can_place_mine(self, obj: GameObject):
+    def can_place_mine(self, obj: GameObject):
         if not self.on_field(obj.pos):
             raise OutOfField(obj)
         if obj.pos in self._map:
             raise PlaceError(obj, self.get_object(obj.pos))
-        self._update_rule(obj)
 
-    def _can_place_ship(self, obj: Ship):
+    def can_place_ship(self, obj: Ship):
         curr = obj.pos
         for deck in range(obj.size):
             if not self.on_field(curr):
@@ -76,7 +77,6 @@ class Field:
             if self._ship_near(obj, curr):
                 raise ShipTooNear(obj)
             curr += obj.orient.value
-        self._update_rule(obj)
 
     def _ship_near(self, ship: Ship, coord: Coord) -> bool:
         start = coord + Coord(-1, -1)
@@ -96,7 +96,6 @@ class Field:
         if t not in self._rules:
             raise InvalidGameObject(obj)
         elif self._rules[t] < 1:
-            print(self._rules)
             raise InvalidCount(t)
         else:
             self._rules[t] -= 1
@@ -120,7 +119,7 @@ class Field:
         obj, i = self._map.get(coord, (None, None))
 
         if smoke:
-            if isinstance(obj, Ship) and obj.decks[i] == 1:
+            if isinstance(obj, Ship) and obj.decks[i]:
                 return obj, i
             elif isinstance(obj, Attacked):
                 return obj, i
@@ -137,6 +136,7 @@ class Field:
                coord: Coord, 
                attacked_check: bool = True) -> Union[Ship, Mine, None]:
         obj, i = self.get_object(coord)
+
         if obj is None or isinstance(obj, Mine):
             self._map[coord] = (Attacked(), None)
         elif isinstance(obj, Ship):
@@ -154,6 +154,7 @@ class Field:
                     self._map[coord] = (Attacked(), None)
         elif attacked_check and isinstance(obj, Attacked):
             raise AlreadyAttacked(coord)
+
         return obj
 
     def blow_up_mine(self, mine: Mine) -> GameObjects:

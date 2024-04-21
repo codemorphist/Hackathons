@@ -1,11 +1,13 @@
 from typing import List, Dict, Union, TypeAlias
 from coord import Coord
-from ship import Ship, LinearShip, Frigate, Brig, Gunboat, Orientation
+from ship import Ship, Orientation, LinearShip, Frigate, Brig, Gunboat
 from mine import Mine
-from exceptions import OutOfField, PlaceError, ShipTooNear, InvalidGameObject, InvalidCount
+from exceptions import *
 
-GameObject = Union[Ship, Mine]
-GameObjects = List[GameObject]
+
+GameObject: TypeAlias = Union[Ship, Mine]
+GameObjects: TypeAlias = List[GameObject]
+
 
 DefaultRules = {
     LinearShip: 1,
@@ -15,9 +17,11 @@ DefaultRules = {
     Mine: 2
 }
 
+
 class Attacked:
     def __repr__(self) -> str:
         return "Attacked()"
+
 
 class Field:
     def __init__(self, 
@@ -116,7 +120,17 @@ class Field:
                         continue
                     self._map[coord] = (Attacked(), None)
         return obj
-    
+
+    def blow_up_mine(self, mine: Mine) -> GameObjects:
+        attacked_objects = []
+        start = mine.pos + mine.damage_radius * Coord(-1, -1)
+        end = mine.pos + mine.damage_radius * Coord(1, 1)
+
+        for coord in self.iterate_rectangle(start, end):
+            attacked_objects.append(self.attack(coord))
+            
+        return attacked_objects
+   
     @property
     def field(self):
         field = {}
@@ -165,10 +179,7 @@ if __name__ == "__main__":
     RESET = "\u001b[0m"
 
 
-    f.attack(Coord(2, 5))
-    f.attack(Coord(2, 1))
-    f.attack(Coord(3, 1))
-    f.attack(Coord(4, 1))
+    f.blow_up_mine(Mine(Coord(4, 4), 1))
 
 
     print(" ", BLUE + " ".join([chr(ord("a")+i) for i in range(f.size)]) + RESET)

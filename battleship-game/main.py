@@ -20,11 +20,13 @@ def get_player_move(game: BattleGame) -> Coord:
         move = Coord(*tuple(map(int, input("Ви вже били по цій клітині капітан: ").split())))
     return move
 
+
 def get_bot_move(game: BattleGame) -> Coord:
     move = random_move()    
     while not game.can_attack(move):
         move = random_move()
     return move
+
 
 def print_result(res: MoveResult, you: bool):
     you_text = {

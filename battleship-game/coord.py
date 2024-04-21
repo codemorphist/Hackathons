@@ -29,7 +29,7 @@ class Coord:
         yield self.y
 
     def __hash__(self):
-        return hash(str(self))
+        return hash(f"{self._x}:{self._y}")
 
     def __add__(self, coord):
         sx, sy = self

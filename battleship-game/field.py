@@ -44,6 +44,7 @@ class Field:
             self._place_ship(obj)
         else:
             raise InvalidGameObject(obj)
+        self._check_rule(obj)
 
     def _place_mine(self, obj: Mine):
         if not self.on_field(obj.pos):
@@ -52,7 +53,6 @@ class Field:
             raise PlaceError(obj, self.get_object(obj.pos))
 
         self._map[obj.pos] = (obj, None)
-        self._change_rule(obj)
 
     def _place_ship(self, obj: Ship):
         curr = obj.pos
@@ -66,7 +66,6 @@ class Field:
             self._map[curr] = (obj, deck)
 
             curr += obj.orient.value
-        self._change_rule(obj)
 
     def _ship_near(self, ship: Ship, coord: Coord) -> bool:
         for x in range(coord.x - 1, coord.x + 2):
@@ -81,7 +80,7 @@ class Field:
                     return True
         return False
 
-    def _change_rule(self, obj: GameObject):
+    def _check_rule(self, obj: GameObject):
         t = type(obj)
         if t not in self._rules:
             raise InvalidGameObject(obj)

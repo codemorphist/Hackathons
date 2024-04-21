@@ -48,14 +48,25 @@ class Field:
             raise InvalidGameObject(obj)
 
     def _place_mine(self, obj: Mine):
+        self._can_place_mine(obj)
+        self._map[obj.pos] = (obj, None)
+
+    def _place_ship(self, obj: Ship):
+        self._can_place_ship(obj)
+        curr = obj.pos
+        for deck in range(obj.size):
+            self._map[curr] = (obj, deck)
+            curr += obj.orient.value
+        self._ships.append(obj)
+
+    def _can_place_mine(self, obj: GameObject):
         if not self.on_field(obj.pos):
             raise OutOfField(obj)
         if obj.pos in self._map:
             raise PlaceError(obj, self.get_object(obj.pos))
         self._update_rule(obj)
-        self._map[obj.pos] = (obj, None)
 
-    def _place_ship(self, obj: Ship):
+    def _can_place_ship(self, obj: Ship):
         curr = obj.pos
         for deck in range(obj.size):
             if not self.on_field(curr):
@@ -64,12 +75,8 @@ class Field:
                 raise PlaceError(obj, self.get_object(curr))
             if self._ship_near(obj, curr):
                 raise ShipTooNear(obj)
-
-            self._map[curr] = (obj, deck)
-
             curr += obj.orient.value
         self._update_rule(obj)
-        self._ships.append(obj)
 
     def _ship_near(self, ship: Ship, coord: Coord) -> bool:
         start = coord + Coord(-1, -1)
@@ -133,8 +140,8 @@ class Field:
                 start, end = obj.get_start_end()
 
                 for coord in self.iterate_rectangle(start, end):
-                    obj, _ = self.get_object(coord)
-                    if isinstance(obj, Ship):
+                    o, _ = self.get_object(coord)
+                    if isinstance(o, Ship):
                         continue
                     self._map[coord] = (Attacked(), None)
         return obj

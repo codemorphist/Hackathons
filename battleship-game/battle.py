@@ -17,6 +17,7 @@ class BattleStatus(Enum):
 class MoveResult(Enum):
     Miss = auto()
     ShipDamaged = auto()
+    ShipDestroyed = auto()
     BlowUpMine = auto()
 
 
@@ -41,15 +42,19 @@ class BattleGame:
         move_result = None
         obj = self._other_player.field.attack(coord)
         if isinstance(obj, Ship):
-            move_result = MoveResult.ShipDamaged
+            if obj.is_destroyed(): 
+                move_result = MoveResult.ShipDestroyed
+            else:
+                move_result = MoveResult.ShipDamaged
         elif isinstance(obj, Mine):
-            destroyed = self._current_player.field.blow_up_mine(obj)
+            self._current_player.field.blow_up_mine(obj)
             move_result = MoveResult.BlowUpMine
+            self._switch_turn()
         else:
             move_result = MoveResult.Miss
+            self._switch_turn()
 
         self._update_status()
-        self._switch_turn()
         return move_result, self.status
 
     def _switch_turn(self):

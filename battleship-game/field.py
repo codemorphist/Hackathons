@@ -68,16 +68,16 @@ class Field:
             curr += obj.orient.value
 
     def _ship_near(self, ship: Ship, coord: Coord) -> bool:
-        for x in range(coord.x - 1, coord.x + 2):
-            for y in range(coord.y - 1, coord.y + 2):
-                curr = Coord(x, y)
-                if curr == coord:
-                    continue
-                obj = self.get_object(curr)[0]
-                if obj is None:
-                    continue
-                if isinstance(obj, Ship) and obj is not ship:
+        start = coord + Coord(-1, -1)
+        end = coord + Coord(1, 1)
+        for curr in self.iterate_rectangle(start, end):
+            if curr == coord:
+                continue
+            obj, _ = self.get_object(curr)
+            if isinstance(obj, Ship) and obj is not ship:
                     return True
+            else:
+                continue
         return False
 
     def _check_rule(self, obj: GameObject):

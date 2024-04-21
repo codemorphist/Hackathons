@@ -35,10 +35,11 @@ class Battle:
 
         move_result = None
         obj = self._other_player.field.attack(coord)
+        print(obj)
         if isinstance(obj, Ship):
             move_result = MoveResult.ShipDamaged
         elif isinstance(obj, Mine):
-            destroyed = self._current_player.field.blow_up_mine(obj)
+            self._current_player.field.blow_up_mine(obj)
             move_result = MoveResult.BlowUpMine
         else:
             move_result = MoveResult.Miss
@@ -97,6 +98,6 @@ if __name__ == "__main__":
 
     game = Battle(p1, p2)
 
-    print(game.attack(Coord(0, 0)))
-    print(game._current_player)
+    # print(game.attack(Coord(4, 4)))
+    # print(game._current_player)
     print(game.attack(Coord(0, 0)))

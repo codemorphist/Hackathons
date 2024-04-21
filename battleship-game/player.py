@@ -14,3 +14,5 @@ class Player:
     def field(self):
         return self._field
 
+    def __repr__(self) -> str:
+        return f"Player(name={self.name})"

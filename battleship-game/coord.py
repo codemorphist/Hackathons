@@ -3,9 +3,7 @@ class Coord:
     Coord class is implementation of coodinates
     """
 
-    def __init__(self, 
-                 x: int, 
-                 y: int ):
+    def __init__(self, x: int, y: int):
         """
         :param x: x coodinate
         :param y: y coodinate

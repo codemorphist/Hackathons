@@ -3,6 +3,7 @@ from coord import Coord
 from ship import Ship, Orientation, LinearShip, Frigate, Brig, Gunboat
 from mine import Mine
 from exceptions import *
+from copy import copy
 
 
 GameObject: TypeAlias = Union[Ship, Mine]
@@ -29,8 +30,9 @@ class Field:
                  size: int = 8, 
                  rules: Dict[type, int] = DefaultRules):
         self._map = {}
+        self._ships = []
         self._size = size
-        self._rules = rules
+        self._rules = copy(rules)
         self.place_objects(objects)
 
     def place_objects(self, objects: GameObjects):
@@ -44,14 +46,13 @@ class Field:
             self._place_ship(obj)
         else:
             raise InvalidGameObject(obj)
-        self._check_rule(obj)
 
     def _place_mine(self, obj: Mine):
         if not self.on_field(obj.pos):
             raise OutOfField(obj)
         if obj.pos in self._map:
             raise PlaceError(obj, self.get_object(obj.pos))
-
+        self._update_rule(obj)
         self._map[obj.pos] = (obj, None)
 
     def _place_ship(self, obj: Ship):
@@ -63,9 +64,12 @@ class Field:
                 raise PlaceError(obj, self.get_object(curr))
             if self._ship_near(obj, curr):
                 raise ShipTooNear(obj)
+
             self._map[curr] = (obj, deck)
 
             curr += obj.orient.value
+        self._update_rule(obj)
+        self._ships.append(obj)
 
     def _ship_near(self, ship: Ship, coord: Coord) -> bool:
         start = coord + Coord(-1, -1)
@@ -80,11 +84,12 @@ class Field:
                 continue
         return False
 
-    def _check_rule(self, obj: GameObject):
+    def _update_rule(self, obj: GameObject):
         t = type(obj)
         if t not in self._rules:
             raise InvalidGameObject(obj)
-        elif self._rules[t] <= 0:
+        elif self._rules[t] < 1:
+            print(self._rules)
             raise InvalidCount(t)
         else:
             self._rules[t] -= 1
@@ -92,6 +97,10 @@ class Field:
     @property
     def map(self):
         return self._map
+
+    @property
+    def ships(self):
+        return self._ships
 
     @property
     def size(self):

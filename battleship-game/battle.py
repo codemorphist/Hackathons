@@ -42,7 +42,10 @@ class BattleGame:
         Retrun True if square by coord on field or not attacked
         else raise Exception
         """
-        obj, _ = self.other_player.field.get_object(coord, True)
+        if not self.other_player.field.on_field(coord):
+            return False
+
+        obj, _ = self.other_player.field.get_object(coord, smoke=True)
         if isinstance(obj, Attacked):
             return False
         if isinstance(obj, Ship):

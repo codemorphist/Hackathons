@@ -7,11 +7,10 @@ from player import Player
 from ascii import draw_game
 from random import randint
 from exceptions import *
+from utils import random_coord
+from bot import Bot
 import os
 
-
-def random_move(size: int = 8):
-    return Coord(randint(0, size-1), randint(0, size-1))
 
 
 def get_player_move(game: BattleGame) -> Coord:
@@ -22,9 +21,9 @@ def get_player_move(game: BattleGame) -> Coord:
 
 
 def get_bot_move(game: BattleGame) -> Coord:
-    move = random_move()    
+    move = random_coord()    
     while not game.can_attack(move):
-        move = random_move()
+        move = random_coord()
     return move
 
 
@@ -84,7 +83,7 @@ f2 = Field(
 
 os.system("clear")
 you = Player(input("Введіть ваше ім'я: "), f1)
-bot= Player("Бо Джек Т", f2)
+bot = Bot()
 
 game = BattleGame(you, bot)
 
@@ -92,15 +91,19 @@ os.system("clear")
 draw_game(game, you)
 
 status = game.status
+you_move = True
 while True:
     if game.current_player is you:
         you_move = True
         move = get_player_move(game) 
     else:
         you_move = False
-        move = get_bot_move(game)
+        move = bot.get_move(game)
 
     res, status = game.attack(move)
+
+    if not you_move:
+        bot.set_result(res)
     
     os.system("clear")
     draw_game(game, you)

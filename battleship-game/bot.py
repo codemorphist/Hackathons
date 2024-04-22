@@ -30,6 +30,9 @@ class Bot(Player):
         return move
 
     def _matroos_level(self, game: BattleGame) -> Coord:
+        return self._random_move(game)
+        
+    def _capitan_level(self, game: BattleGame) -> Coord:
         if self._last_move_result is MoveResult.ShipDamaged:
             self._queue = []
             for orient in Orientation:
@@ -48,9 +51,6 @@ class Bot(Player):
 
         self._last_move = move
         return move
-
-    def _capitan_level(self, game: BattleGame) -> Coord:
-        pass
 
     def _admiral_level(self, game: BattleGame) -> Coord:
         pass

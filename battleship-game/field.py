@@ -135,26 +135,33 @@ class Field:
     def attack(self, 
                coord: Coord, 
                attacked_check: bool = True) -> Union[Ship, Mine, None]:
-        obj, i = self.get_object(coord)
+        obj, deck = self.get_object(coord)
         if obj is None or isinstance(obj, Mine):
-            self._map[coord] = (Attacked(), None)
+            self._attack_square(coord) 
         elif isinstance(obj, Ship):
-            if attacked_check and obj.decks[i]:
-                raise AlreadyAttacked(coord)
-
-            obj.attack_deck(i)
-            if obj.is_destroyed():
-                start, end = obj.get_start_end()
-
-                for coord in self.iterate_rectangle(start, end):
-                    o, _ = self.get_object(coord)
-                    if isinstance(o, Ship):
-                        continue
-                    self._map[coord] = (Attacked(), None)
+            self._attack_ship(obj, deck, attacked_check)
         elif attacked_check and isinstance(obj, Attacked):
             raise AlreadyAttacked(coord)
-
         return obj
+
+    def _attack_ship(self, 
+                     ship: Ship, deck: int, 
+                     attacked_check: bool = True):
+        if attacked_check and ship.decks[deck]:
+            raise AlreadyAttacked(coord)
+
+        ship.attack_deck(deck)
+        if ship.is_destroyed():
+            start, end = ship.get_start_end()
+
+            for coord in self.iterate_rectangle(start, end):
+                obj, _ = self.get_object(coord)
+                if isinstance(obj, Ship):
+                    continue
+                self._map[coord] = (Attacked(), None)
+
+    def _attack_square(self, square: Coord):
+        self._map[square] = (Attacked(), None)
 
     def blow_up_mine(self, mine: Mine) -> GameObjects:
         attacked_objects = []

@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.4" author="PygubuDesigner 0.39.2">
+  <project>
+    <settings>
+      <setting id="name">Balistic Calculator</setting>
+      <setting id="description">BC</setting>
+      <setting id="module_name">BalisticCalculatorGUI</setting>
+      <setting id="template">application</setting>
+      <setting id="main_widget">BalisticSimulator</setting>
+      <setting id="main_classname">BaliscticCalculatorGUI</setting>
+      <setting id="main_menu" />
+      <setting id="output_dir" />
+      <setting id="output_dir2" />
+      <setting id="import_tkvariables">True</setting>
+      <setting id="use_ttk_styledefinition_file">True</setting>
+      <setting id="use_i18n">False</setting>
+      <setting id="all_ids_attributes">False</setting>
+      <setting id="generate_code_onsave">True</setting>
+      <setting id="use_window_centering_code">True</setting>
+      <setting id="ttk_style_definition_file" />
+    </settings>
+    <customwidgets />
+  </project>
+  <object class="tk.Tk" id="BalisticSimulator" named="True">
+    <property name="className">BalisticCalculatro</property>
+    <property name="geometry">1280x800</property>
+    <property name="height">200</property>
+    <property name="resizable">none</property>
+    <property name="width">200</property>
+    <child>
+      <object class="ttk.Frame" id="DataInputFrame" named="True">
+        <property name="class_">DataInputFrame</property>
+        <property name="height">940</property>
+        <property name="relief">groove</property>
+        <property name="width">800</property>
+        <layout manager="grid">
+          <property name="column">0</property>
+          <property name="ipadx">1</property>
+          <property name="ipady">1</property>
+          <property name="padx">10</property>
+          <property name="pady">10</property>
+          <property name="row">0</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="xy_canvas" named="True">
+            <property name="background">#ffffff</property>
+            <property name="confine">false</property>
+            <property name="height">380</property>
+            <property name="state">normal</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="padx">2</property>
+              <property name="pady">2</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Canvas" id="xz_canvas" named="True">
+            <property name="background">#ffffff</property>
+            <property name="height">380</property>
+            <layout manager="grid">
+              <property name="column">1</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Canvas" id="yz_canvas" named="True">
+            <property name="background">#ffffff</property>
+            <property name="height">380</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Canvas" id="image_canvas" named="True">
+            <property name="background">#ffffff</property>
+            <property name="height">380</property>
+            <layout manager="grid">
+              <property name="column">1</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="Visualization" named="True">
+        <property name="class_">VisualisationFrame</property>
+        <property name="height">940</property>
+        <property name="width">440</property>
+        <layout manager="grid">
+          <property name="column">1</property>
+          <property name="columnspan">1</property>
+          <property name="padx">10</property>
+          <property name="pady">10</property>
+          <property name="row">0</property>
+          <property name="rowspan">3</property>
+        </layout>
+        <child>
+          <object class="ttk.Frame" id="GlobasCoords" named="True">
+            <property name="height">200</property>
+            <property name="relief">groove</property>
+            <property name="width">420</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="padx">5</property>
+              <property name="pady">5</property>
+              <property name="row">0</property>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="label1">
+                <property name="font">TkHeadingFont</property>
+                <property name="relief">flat</property>
+                <property name="state">normal</property>
+                <property name="text" translatable="yes">Angles</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry1">
+                <property name="justify">center</property>
+                <property name="textvariable">double:roll_angle</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry2">
+                <property name="justify">center</property>
+                <property name="textvariable">double:pitch_angle</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry3">
+                <property name="justify">center</property>
+                <property name="textvariable">double:yaw_angle</property>
+                <layout manager="grid">
+                  <property name="column">2</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label2">
+                <property name="cursor">arrow</property>
+                <property name="font">TkHeadingFont</property>
+                <property name="text" translatable="yes">Position</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry5">
+                <property name="font">TkTextFont</property>
+                <property name="justify">center</property>
+                <property name="textvariable">double:x_pos</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry6">
+                <property name="justify">center</property>
+                <property name="textvariable">double:y_pos</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry7">
+                <property name="justify">center</property>
+                <property name="textvariable">double:z_pos</property>
+                <layout manager="grid">
+                  <property name="column">2</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="Vectors" named="True">
+            <property name="height">200</property>
+            <property name="relief">groove</property>
+            <property name="width">430</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="padx">5</property>
+              <property name="pady">5</property>
+              <property name="row">1</property>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="label3">
+                <property name="font">TkHeadingFont</property>
+                <property name="justify">left</property>
+                <property name="state">normal</property>
+                <property name="text" translatable="yes">Velocity Vector</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry8">
+                <property name="justify">center</property>
+                <property name="textvariable">double:x_vel</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry9">
+                <property name="justify">center</property>
+                <property name="textvariable">double:y_vel</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry10">
+                <property name="justify">center</property>
+                <property name="textvariable">double:z_vel</property>
+                <layout manager="grid">
+                  <property name="column">2</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label4">
+                <property name="font">TkHeadingFont</property>
+                <property name="justify">center</property>
+                <property name="state">normal</property>
+                <property name="takefocus">false</property>
+                <property name="text" translatable="yes">Wind Vector</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry12">
+                <property name="justify">center</property>
+                <property name="textvariable">double:x_wind</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry13">
+                <property name="justify">center</property>
+                <property name="textvariable">double:y_wind</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry14">
+                <property name="cursor">arrow</property>
+                <property name="exportselection">true</property>
+                <property name="justify">center</property>
+                <property name="textvariable">double:z_wind</property>
+                <layout manager="grid">
+                  <property name="column">2</property>
+                  <property name="row">5</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Frame" id="Controls" named="True">
+            <property name="class_">Controls</property>
+            <property name="height">200</property>
+            <property name="width">430</property>
+            <layout manager="grid">
+              <property name="column">0</property>
+              <property name="padx">5</property>
+              <property name="pady">5</property>
+              <property name="row">3</property>
+            </layout>
+            <child>
+              <object class="ttk.Button" id="calculate_button" named="True">
+                <property name="command" type="command" cbtype="simple">calculate_trajectory</property>
+                <property name="default">normal</property>
+                <property name="text" translatable="yes">Calculate</property>
+                <property name="width">43</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

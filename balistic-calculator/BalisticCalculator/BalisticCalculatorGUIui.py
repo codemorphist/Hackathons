@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 import pathlib
 import tkinter as tk
-from matplotlib.figure import Figure
 import pygubu
 
 import numpy as np
+import cv2
 import matplotlib as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
@@ -42,7 +42,9 @@ class BaliscticCalculatorGUIUI:
         self.builder.import_variables(self)
 
         self.builder.connect_callbacks(self)
-
+        self.setup_plots()
+        
+    def setup_plots(self):
         self.xy_frame = self.builder.get_object("xy_frame")
         self.xy_figure = Figure(figsize=(4, 4), dpi=100)
         self.xy_canvas = FigureCanvasTkAgg(self.xy_figure, master=self.xy_frame)
@@ -60,6 +62,12 @@ class BaliscticCalculatorGUIUI:
         self.yz_canvas = FigureCanvasTkAgg(self.yz_figure, master=self.yz_frame)
         self.yz_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
         self.yz_canvas.draw()
+
+        self.image_frame = self.builder.get_object("image_frame")
+        self.image_figure = Figure(figsize=(4, 4), dpi=100)
+        self.image_canvas = FigureCanvasTkAgg(self.image_figure, master=self.image_frame)
+        self.image_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.image_canvas.draw()
 
     def center(self, event):
         wm_min = self.mainwindow.wm_minsize()
@@ -92,7 +100,10 @@ class BaliscticCalculatorGUIUI:
     def calculate_trajectory(self):
         self.xy_figure.clear()
         t = np.arange(0, 3, .01)
-        self.xy_figure.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
+        ax = self.xy_figure.add_subplot(111)
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.plot(t, 2 * np.sin(2 * np.pi * t))
         self.xy_canvas.draw()
 
 

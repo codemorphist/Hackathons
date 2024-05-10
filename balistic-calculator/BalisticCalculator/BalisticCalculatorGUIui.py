@@ -1,7 +1,16 @@
 #!/usr/bin/python3
 import pathlib
 import tkinter as tk
+from matplotlib.figure import Figure
 import pygubu
+
+import numpy as np
+import matplotlib as plt
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
+                                               NavigationToolbar2Tk)
+# Implement the default Matplotlib key bindings.
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "balistic_app.ui"
@@ -34,6 +43,24 @@ class BaliscticCalculatorGUIUI:
 
         self.builder.connect_callbacks(self)
 
+        self.xy_frame = self.builder.get_object("xy_frame")
+        self.xy_figure = Figure(figsize=(4, 4), dpi=100)
+        self.xy_canvas = FigureCanvasTkAgg(self.xy_figure, master=self.xy_frame)
+        self.xy_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.xy_canvas.draw()
+
+        self.xz_frame = self.builder.get_object("xz_frame")
+        self.xz_figure = Figure(figsize=(4, 4), dpi=100)
+        self.xz_canvas = FigureCanvasTkAgg(self.xz_figure, master=self.xz_frame)
+        self.xz_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.xz_canvas.draw()
+
+        self.yz_frame = self.builder.get_object("yz_frame")
+        self.yz_figure = Figure(figsize=(4, 4), dpi=100)
+        self.yz_canvas = FigureCanvasTkAgg(self.yz_figure, master=self.yz_frame)
+        self.yz_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.yz_canvas.draw()
+
     def center(self, event):
         wm_min = self.mainwindow.wm_minsize()
         wm_max = self.mainwindow.wm_maxsize()
@@ -63,7 +90,10 @@ class BaliscticCalculatorGUIUI:
         self.mainwindow.mainloop()
 
     def calculate_trajectory(self):
-        pass
+        self.xy_figure.clear()
+        t = np.arange(0, 3, .01)
+        self.xy_figure.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
+        self.xy_canvas.draw()
 
 
 if __name__ == "__main__":

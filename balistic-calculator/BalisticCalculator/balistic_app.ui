@@ -30,7 +30,7 @@
     <child>
       <object class="ttk.Frame" id="DataInputFrame" named="True">
         <property name="class_">DataInputFrame</property>
-        <property name="height">940</property>
+        <property name="height">780</property>
         <property name="relief">groove</property>
         <property name="width">800</property>
         <layout manager="grid">
@@ -42,23 +42,19 @@
           <property name="row">0</property>
         </layout>
         <child>
-          <object class="tk.Canvas" id="xy_canvas" named="True">
-            <property name="background">#ffffff</property>
-            <property name="confine">false</property>
+          <object class="ttk.Frame" id="xy_frame" named="True">
             <property name="height">380</property>
-            <property name="state">normal</property>
+            <property name="width">380</property>
             <layout manager="grid">
               <property name="column">0</property>
-              <property name="padx">2</property>
-              <property name="pady">2</property>
               <property name="row">0</property>
             </layout>
           </object>
         </child>
         <child>
-          <object class="tk.Canvas" id="xz_canvas" named="True">
-            <property name="background">#ffffff</property>
+          <object class="ttk.Frame" id="xz_frame" named="True">
             <property name="height">380</property>
+            <property name="width">380</property>
             <layout manager="grid">
               <property name="column">1</property>
               <property name="row">0</property>
@@ -66,9 +62,9 @@
           </object>
         </child>
         <child>
-          <object class="tk.Canvas" id="yz_canvas" named="True">
-            <property name="background">#ffffff</property>
+          <object class="ttk.Frame" id="yz_frame" named="True">
             <property name="height">380</property>
+            <property name="width">380</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="row">2</property>
@@ -76,9 +72,9 @@
           </object>
         </child>
         <child>
-          <object class="tk.Canvas" id="image_canvas" named="True">
-            <property name="background">#ffffff</property>
+          <object class="ttk.Frame" id="image_frame" named="True">
             <property name="height">380</property>
+            <property name="width">380</property>
             <layout manager="grid">
               <property name="column">1</property>
               <property name="row">2</property>

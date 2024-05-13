@@ -1,0 +1,62 @@
+from prime_gen import get_prime
+import random
+from math import lcm, gcd
+import base64
+
+
+class RSAPublicKey:
+    def __init__(self, n, e):
+        """
+        RSAPublicKey ::= SEQUENCE {
+             modulus           INTEGER,  -- n
+             publicExponent    INTEGER   -- e
+        }
+        """
+        self.modulus = n
+        self.publicExponent = e
+
+
+class RSAPrivateKey:
+    def __init__(self, n, e, d, p, q):
+        """
+        RSAPrivateKey ::= SEQUENCE {
+             version           Version,
+             modulus           INTEGER,  -- n
+             publicExponent    INTEGER,  -- e
+             privateExponent   INTEGER,  -- d
+             prime1            INTEGER,  -- p
+             prime2            INTEGER,  -- q
+             exponent1         INTEGER,  -- d mod (p-1)
+             exponent2         INTEGER,  -- d mod (q-1)
+             coefficient       INTEGER,  -- (inverse of q) mod p
+             otherPrimeInfos   OtherPrimeInfos OPTIONAL
+        }
+        """
+        self.version = 0
+        self.modulus = n
+        self.publicExponent = e
+        self.privateExponent = d
+        self.prime1 = p
+        self.prime2 = q
+        self.exponent1 = d % (p-1)
+        self.exponent2 = d % (q-1)
+        self.coefficient = pow(q, -1, p)
+        
+
+def get_e_exponent(l_n: int):
+    e = random.randint(3, l_n - 1)
+    while gcd(e, l_n) != 1:
+        e = random.randint(2, l_n - 1)
+    return e
+
+def generate_keys(key_len: int = 512):
+    p, q = get_prime(key_len), get_prime(key_len)
+
+    n = p * q
+
+    l_n = lcm(p-1, q-1)
+
+    e = get_e_exponent(l_n)
+    d = pow(e, -1, l_n)
+
+    return RSAPublicKey(n, e), RSAPrivateKey(n, e, d, p, q)

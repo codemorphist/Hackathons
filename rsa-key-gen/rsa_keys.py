@@ -5,7 +5,7 @@ import base64
 
 
 class RSAPublicKey:
-    def __init__(self, n, e):
+    def __init__(self, n: int, e: int):
         """
         RSAPublicKey ::= SEQUENCE {
              modulus           INTEGER,  -- n
@@ -15,9 +15,16 @@ class RSAPublicKey:
         self.modulus = n
         self.publicExponent = e
 
+    def __repr__(self) -> str:
+        seq = "RSAPublicKey ::= {\n"
+        for name, value in vars(self).items():
+            seq += f"\t{name}:\t{value}\n"
+        seq += "}"
+        return seq
+
 
 class RSAPrivateKey:
-    def __init__(self, n, e, d, p, q):
+    def __init__(self, n: int, e: int, d: int, p: int, q: int):
         """
         RSAPrivateKey ::= SEQUENCE {
              version           Version,
@@ -32,7 +39,7 @@ class RSAPrivateKey:
              otherPrimeInfos   OtherPrimeInfos OPTIONAL
         }
         """
-        self.version = 0
+        self.version: int | str = 0
         self.modulus = n
         self.publicExponent = e
         self.privateExponent = d
@@ -41,6 +48,13 @@ class RSAPrivateKey:
         self.exponent1 = d % (p-1)
         self.exponent2 = d % (q-1)
         self.coefficient = pow(q, -1, p)
+
+    def __repr__(self) -> str:
+        seq = "RSAPrivateKey ::= {\n"
+        for name, value in vars(self).items():
+            seq += f"\t{name}:\t{value}\n"
+        seq += "}"
+        return seq
         
 
 def get_e_exponent(l_n: int):
@@ -49,6 +63,7 @@ def get_e_exponent(l_n: int):
         e = random.randint(2, l_n - 1)
     return e
 
+
 def generate_keys(key_len: int = 512):
     p, q = get_prime(key_len), get_prime(key_len)
 
@@ -56,7 +71,13 @@ def generate_keys(key_len: int = 512):
 
     l_n = lcm(p-1, q-1)
 
-    e = get_e_exponent(l_n)
+    # e = get_e_exponent(l_n)
+    e = 65537
     d = pow(e, -1, l_n)
 
     return RSAPublicKey(n, e), RSAPrivateKey(n, e, d, p, q)
+
+if __name__ == "__main__":
+    pub, priv = generate_keys(int(input("input key len: ")))
+    print(pub)
+    print(priv)

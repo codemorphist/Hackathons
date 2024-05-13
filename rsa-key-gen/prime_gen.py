@@ -35,7 +35,7 @@ def is_prime(n, k=5):
 def get_prime(n):
     num = rand(n)
     while not is_prime(num):
-        num = rand(n)
+        num += 1
     return num
 
 if __name__ == "__main__":

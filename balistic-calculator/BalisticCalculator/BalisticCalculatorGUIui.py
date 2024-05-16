@@ -108,8 +108,11 @@ class BaliscticCalculatorGUIUI:
 
     def visualize(self, points):
         self.xy_canvas.delete("all")
+        self.xz_canvas.delete("all")
+        self.yz_canvas.delete("all")
+
         for x, y, z in points:
-            self.xy_canvas.create_oval(x-2+380/2, -y-2+380/2, x+2+380/2, -y+2+380/2, 
+            self.xy_canvas.create_oval(y-2+380/2,-x-2+380/2, y+2+380/2, -x+2+380/2,
                                        fill="red", outline="red")
             self.xz_canvas.create_oval(x-2+380/2, -z-2+380/2, x+2+380/2, -z+2+380/2, 
                                        fill="red", outline="red")

@@ -2,15 +2,9 @@
 import pathlib
 import tkinter as tk
 import pygubu
-
 import numpy as np
-import cv2
-import matplotlib as plt
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
-                                               NavigationToolbar2Tk)
-# Implement the default Matplotlib key bindings.
-from matplotlib.backend_bases import key_press_handler
-from matplotlib.figure import Figure
+from calculator import trajectory
+
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "balistic_app.ui"
@@ -46,28 +40,23 @@ class BaliscticCalculatorGUIUI:
         
     def setup_plots(self):
         self.xy_frame = self.builder.get_object("xy_frame")
-        self.xy_figure = Figure(figsize=(4, 4), dpi=100)
-        self.xy_canvas = FigureCanvasTkAgg(self.xy_figure, master=self.xy_frame)
-        self.xy_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        self.xy_canvas.draw()
+        self.xy_canvas = tk.Canvas(self.xy_frame, width=380, height=380,
+                                   bg="white")
+        self.xy_canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
         self.xz_frame = self.builder.get_object("xz_frame")
-        self.xz_figure = Figure(figsize=(4, 4), dpi=100)
-        self.xz_canvas = FigureCanvasTkAgg(self.xz_figure, master=self.xz_frame)
-        self.xz_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        self.xz_canvas.draw()
+        self.xz_canvas = tk.Canvas(self.xz_frame, width=380, height=380,
+                                   bg="white")
+        self.xz_canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
 
         self.yz_frame = self.builder.get_object("yz_frame")
-        self.yz_figure = Figure(figsize=(4, 4), dpi=100)
-        self.yz_canvas = FigureCanvasTkAgg(self.yz_figure, master=self.yz_frame)
-        self.yz_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        self.yz_canvas.draw()
+        self.yz_canvas = tk.Canvas(self.yz_frame, width=380, height=380,
+                                   bg="white")
+        self.yz_canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
         self.image_frame = self.builder.get_object("image_frame")
-        self.image_figure = Figure(figsize=(4, 4), dpi=100)
-        self.image_canvas = FigureCanvasTkAgg(self.image_figure, master=self.image_frame)
-        self.image_canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-        self.image_canvas.draw()
+
 
     def center(self, event):
         wm_min = self.mainwindow.wm_minsize()
@@ -97,16 +86,42 @@ class BaliscticCalculatorGUIUI:
             self.center_map = self.mainwindow.bind("<Map>", self.center)
         self.mainwindow.mainloop()
 
+    def parse_data(self):
+        roll = self.roll_angle.get()
+        pitch = self.pitch_angle.get()
+        yaw = self.yaw_angle.get()
+
+        x = self.x_pos.get()
+        y = self.y_pos.get()
+        z = self.z_pos.get()
+
+        x_vel = self.x_vel.get()
+        y_vel = self.y_vel.get()
+        z_vel = self.z_vel.get()
+
+        x_wind = self.x_wind.get()
+        y_wind = self.y_wind.get()
+        z_wind = self.z_wind.get()
+
+        return ((roll, pitch, yaw), (x, y, z)), \
+                (x_vel, y_vel, z_vel), (x_wind, y_wind, z_wind)
+
+    def visualize(self, points):
+        self.xy_canvas.delete("all")
+        for x, y, z in points:
+            self.xy_canvas.create_oval(x-2+380/2, -y-2+380/2, x+2+380/2, -y+2+380/2, 
+                                       fill="red", outline="red")
+            self.xz_canvas.create_oval(x-2+380/2, -z-2+380/2, x+2+380/2, -z+2+380/2, 
+                                       fill="red", outline="red")
+            self.yz_canvas.create_oval(y-2+380/2, -z-2+380/2, y+2+380/2, -z+2+380/2, 
+                                       fill="red", outline="red")
+
     def calculate_trajectory(self):
-        self.xy_figure.clear()
-        t = np.arange(0, 3, .01)
-        ax = self.xy_figure.add_subplot(111)
-        ax.set_xlabel("x")
-        ax.set_ylabel("y")
-        ax.plot(t, 2 * np.sin(2 * np.pi * t))
-        self.xy_canvas.draw()
+        data = self.parse_data()
+        points = trajectory(*data)
+        self.visualize(points)
 
-
+    
 if __name__ == "__main__":
     app = BaliscticCalculatorGUIUI()
     app.run()
